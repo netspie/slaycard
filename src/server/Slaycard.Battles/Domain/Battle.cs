@@ -9,14 +9,24 @@ public class Battle
 {
     public Player[] Players { get; private set; }
 
-    public void AssembleCard(string cardId, string? targetCardId = null)
+    public void AssembleActionCard(string cardId, string? targetCardId = null)
     {
         //Players.AssembleCard(cardId, targetCardId);
     }
 
-    public void UseActionCardOnUnit(string actionCardId, string? unitCardId = null)
+    public void ApplyActionCard(
+        string originPlayerId,
+        string originUnitId,
+        string actionCardId, 
+        string targetPlayerId,
+        string targetUnitId)
     {
-        //Players.Act(actionCardId, targetCardId);
+        Players.ApplyActionCard(
+            originPlayerId, 
+            originUnitId,
+            targetPlayerId, 
+            actionCardId, 
+            targetUnitId);
     }
 
     public void Pass()
@@ -29,31 +39,43 @@ public class Player
 {
     public Unit[] Units { get; private set; }
 
-    public ActionCard TakeActionCard(string actionCardId)
+    public ActionCard TakeActionCard(
+        string unitId,
+        string actionCardId)
     {
         return default;
     }
 
-    public void ApplyActionCard(ActionCard actionCard, string unitId)
+    public void ApplyActionCard(
+        Player originPlayer,
+        string originUnitId,
+        string actionCardId, 
+        string targetUnitId)
     {
-        Units.ApplyActionCard(actionCard, unitId);
-    }
-}
+        var actionCard = originPlayer.TakeActionCard(originUnitId, actionCardId);
+        var originUnit = originPlayer.GetUnit(originUnitId);
 
+        Units.ApplyActionCard(actionCard, originUnit, targetUnitId);
+    }
+
+    public Unit GetUnit(string unitId) =>
+        Units.OfId(unitId);
+}
 public static class PlayerExtensions
 {
-    public static void UseActionCardOnUnit(
+    public static void ApplyActionCard(
         this IEnumerable<Player> players,
-        string sourcePlayerId,
+        string originPlayerId,
+        string originUnitId,
         string targetPlayerId,
         string actionCardId, 
-        string unitCardId)
+        string targetUnitCardId)
     {
-        var sourcePlayer = players.OfId(sourcePlayerId);
-        var actionCard = sourcePlayer.TakeActionCard(actionCardId);
+        var originPlayer = players.OfId(originPlayerId);
 
         var targetPlayer = players.OfId(targetPlayerId);
-        targetPlayer.ApplyActionCard(actionCard, unitCardId);
+        targetPlayer.ApplyActionCard(
+            originPlayer, originUnitId, actionCardId, targetUnitCardId);
     }
 
     public static Player OfId(this IEnumerable<Player> players, string playerId) =>
@@ -79,10 +101,30 @@ public class Unit
         ActionRow.GenerateCards();
     }
 
-    public void ApplyActionCard(ActionCard actionCard)
+    public void ApplyActionCard(
+        Unit originUnit,
+        ActionCard actionCard)
     {
-        actionCard.ApplyToStatistics(DerivativeStatistics);
+        actionCard.ApplyToTarget(
+            originUnit.DerivativeStatistics,
+            DerivativeStatistics);
     }
+}
+
+public static class UnitExtensions
+{
+    public static void ApplyActionCard(
+        this IEnumerable<Unit> units,
+        ActionCard actionCard,
+        Unit originUnit,
+        string targetUnitId)
+    {
+        var targetUnit = units.OfId(targetUnitId);
+        targetUnit.ApplyActionCard(originUnit, actionCard);
+    }
+
+    public static Unit OfId(this IEnumerable<Unit> unit, string unitId) =>
+       default;
 }
 
 public class StatisticsGroup
@@ -95,17 +137,6 @@ public class Statistic
 
 }
 
-public static class UnitExtensions
-{
-    public static void ApplyActionCard(this IEnumerable<Unit> units, ActionCard actionCard, string unitId)
-    {
-        units.OfId(unitId).ApplyActionCard(actionCard);
-    }
-
-    public static Unit OfId(this IEnumerable<Unit> unit, string unitId) =>
-       default;
-}
-
 public class AssemblySpace
 {
     public void AssembleCard(string actionCardId, string? targetCardId = null)
@@ -114,25 +145,39 @@ public class AssemblySpace
     }
 }
 
-public class ActionCard
+public abstract class ActionCard
 {
-    public void ApplyToStatistics(StatisticsGroup derivativeStatistics)
+    public abstract void ApplyToTarget(
+        StatisticsGroup origin,
+        StatisticsGroup target);
+}
+
+public class MeleeAttackAction : ActionCard
+{
+    public int Damage { get; private set; }
+
+    public override void ApplyToTarget(
+        StatisticsGroup origin,
+        StatisticsGroup target)
     {
-        //if (meleeAttack || punchAttack || kickAttack || headBang || magicMissile.. quick or strong?)
-        //    derivativeStatistics.Damage(attack);
+        //origin.DamageTarget(target, Damage)
+    }
+}
 
-        //if (potion)
-        //    derivativeStatistics.ModifyHp();
+public class MagicMissileAttackAction : ActionCard
+{
+    public int Damage { get; private set; }
 
-        //if (scroll)
-        //    derivativeStatistics.ModifyHp();
+    public override void ApplyToTarget(
+        StatisticsGroup origin,
+        StatisticsGroup target)
+    {
+        //origin.DamageTarget(target, Damage)
     }
 }
 
 public class ActionRow
 {
-    
-
     public void GenerateCards()
     {
 
