@@ -14,6 +14,7 @@ public class Battle
         //Players.AssembleCard(cardId, targetCardId);
     }
 
+    // Change so it supports area/group applies
     public void ApplyActionCard(
         string originPlayerId,
         string originUnitId,
