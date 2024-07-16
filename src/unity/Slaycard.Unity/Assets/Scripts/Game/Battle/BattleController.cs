@@ -5,31 +5,47 @@ namespace Game.Battle
 {
     public class BattleController : MonoBehaviour
     {
-        [SerializeField] private Battlefield _boardPrefab;
+        [SerializeField] private Battlefield _battlefieldPrefab;
 
         private void Start()
         {
-            Battlefield.Instantiate(_boardPrefab);
+            var canvas = FindObjectOfType<Canvas>();
+            Battlefield.Instantiate(_battlefieldPrefab, canvas.transform, BattleDTO.Battlefield);
         }
 
-        private static GetBattleQueryResponse BattleDTO = new(
-            new BattlefieldDTO(
+        private static readonly GetBattleQueryResponse BattleDTO = new(
+            new BattleDTO(
+                Id: "battle-1",
+                CurrentTurnPlayerId: "player-1",
                 Players: 
                     new[]
                     {
                         new PlayerDTO(
+                            Id: "player-1",
                             Characters: new[]
                             {
-                                new CharacterDTO(),
+                                new CharacterCardDTO(
+                                    "character-1-1", "Miki"),
+                                new CharacterCardDTO(
+                                    "character-1-2", "Koko"),
+                                new CharacterCardDTO(
+                                    "character-1-3", "Kiri"),
                             },
                             ActionCards: new[]
                             {
-                                new ActionCardDTO(),
+                                new ActionCardDTO("orb-1", "Orb", ""),
+                            }),
+                        new PlayerDTO(
+                            Id: "player-2",
+                            Characters: new[]
+                            {
+                                new CharacterCardDTO(
+                                    "character-2-1", "Shachi"),
+                                new CharacterCardDTO(
+                                    "character-2-2", "Aiko"),
+                                new CharacterCardDTO(
+                                    "character-2-3", "Himiko"),
                             })
-                    },
-                AssemblyField:
-                    new AssemblyFieldDTO(
-                        PlayerId: "",
-                        null)));
+                    }));
     }
 }

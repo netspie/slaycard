@@ -2,21 +2,28 @@
 {
     public record GetBattleQuery();
     public record GetBattleQueryResponse(
-        BattlefieldDTO Battlefield);
+        BattleDTO Battlefield);
 
-    public record BattlefieldDTO(
+    public record BattleDTO(
+        string Id,
+        string CurrentTurnPlayerId,
         PlayerDTO[] Players,
-        AssemblyFieldDTO AssemblyField);
+        AssemblyFieldDTO AssemblyField = null);
 
     public record PlayerDTO(
-        CharacterDTO[] Characters,
-        ActionCardDTO[] ActionCards);
+        string Id,
+        CharacterCardDTO[] Characters,
+        ActionCardDTO[] ActionCards = null);
 
-    public record CharacterDTO();
+    public record CharacterCardDTO(
+        string Id,
+        string Name);
 
-    public record ActionCardDTO();
+    public record ActionCardDTO(
+        string Id,
+        string Name,
+        string PlayerId);
 
     public record AssemblyFieldDTO(
-        string PlayerId,
-        ActionCardDTO ActionCard);
+        ActionCardDTO ActionCard = null);
 }
