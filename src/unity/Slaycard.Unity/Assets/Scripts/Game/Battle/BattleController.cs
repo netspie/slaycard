@@ -34,6 +34,13 @@ namespace Game.Battle
                             ActionCards: new[]
                             {
                                 new ActionCardDTO("orb-1", "Orb", ""),
+                                new ActionCardDTO("orb-1", "Magic Missile", ""),
+                                new ActionCardDTO("orb-1", "Attack", ""),
+                                new ActionCardDTO("orb-1", "Potion", ""),
+                                new ActionCardDTO("orb-1", "Potion", ""),
+                                new ActionCardDTO("orb-1", "Attack", ""),
+                                new ActionCardDTO("orb-1", "Magic Missile", ""),
+                                new ActionCardDTO("orb-1", "Orb", ""),
                             }),
                         new PlayerDTO(
                             Id: "player-2",

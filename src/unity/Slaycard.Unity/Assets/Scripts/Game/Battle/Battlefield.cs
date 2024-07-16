@@ -1,6 +1,7 @@
 ﻿using Core.Collections;
 using Game.Battle.UseCases.Queries;
 using System.Linq;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 namespace Game.Battle
@@ -14,6 +15,9 @@ namespace Game.Battle
 
         [SerializeField] private CharacterCard _characterCardPrefab;
         [SerializeField] private ActionCard _actionCardPrefab;
+        [SerializeField] private Transform _actionCardPhantomPrefab;
+
+        private AssembleCardController _assembleCardController;
 
         public static Battlefield Instantiate(
             Battlefield prefab,
@@ -32,13 +36,15 @@ namespace Game.Battle
 
             if (dto.CurrentTurnPlayerId == dto.Players.First().Id)
             {
-                dto.Players[0].ActionCards.ForEach(dto =>
-                {
-                    ActionCard.Instantiate(
-                        go._actionCardPrefab,
-                        go._actionCardsPanel,
-                        dto);
-                });
+                var actionCards = dto.Players[0].ActionCards
+                    .SelectToArray(dto =>
+                        ActionCard.Instantiate(
+                            go._actionCardPrefab,
+                            go._actionCardsPanel,
+                        dto));
+
+                go._assembleCardController = new(
+                    parent, actionCards, go._actionCardPhantomPrefab, go._assemblyFieldPanel);
             }
 
             return go;

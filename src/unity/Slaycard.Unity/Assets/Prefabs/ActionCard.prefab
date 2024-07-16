@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5386109419470883488}
   - component: {fileID: 2102182337389380860}
   - component: {fileID: 2446648784933999628}
-  - component: {fileID: 8893242951680751000}
   - component: {fileID: -7015547726689851113}
   m_Layer: 5
   m_Name: ActionCard
@@ -86,7 +85,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 26078221611871830}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -123,18 +122,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8893242951680751000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 26078221611871830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fc576fe67ee429418c507167b5c59d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &-7015547726689851113
 MonoBehaviour:
   m_ObjectHideFlags: 0

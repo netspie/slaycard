@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace Core.Collections
 {
@@ -35,5 +36,14 @@ namespace Core.Collections
 
             return enumerable;
         }
+
+        public static TOut[] SelectToArray<TIn, TOut>(this IEnumerable<TIn> source, Func<TIn, TOut> selector) =>
+            source.Select(selector).ToArray();
+
+        public static TOut[] SelectToArray<TIn, TOut>(this IEnumerable<TIn> source, Func<TIn, int, TOut> selector) =>
+            source.Select(selector).ToArray();
+
+        public static TOut[] SelectToArray<TOut>(this int count, Func<int, TOut> selector) =>
+            Enumerable.Range(0, count).SelectToArray(selector);
     }
 }
