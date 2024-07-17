@@ -22,6 +22,7 @@ namespace Game.Battle
         private List<GameObject> _temporaryObjects = new();
 
         private RectTransform _assemblyCard;
+        private bool _isCardSnap;
 
         public AssembleCardController(
             Transform dragArea, 
@@ -61,19 +62,33 @@ namespace Game.Battle
 
         private void OnCardDragEnd(ActionCard card, PointerEventData data)
         {
-            card.transform.position = _originalPos;
-            card.transform.SetParent(_originalParent, true);
-            card.transform.SetSiblingIndex(_originalIndex);
+            if (_isCardSnap)
+            {
+                Object.Destroy(card.gameObject);
+            }
+            else
+            {
+                card.transform.position = _originalPos;
+                card.transform.SetParent(_originalParent, true);
+                card.transform.SetSiblingIndex(_originalIndex);
+                _temporaryObjects.ForEach(Object.Destroy);
+            }
 
-            _temporaryObjects.ForEach(Object.Destroy);
+            _isCardSnap = false;
         }
 
         private void OnCardDrag(ActionCard card, PointerEventData data)
         {
             if (data.position.IsInRect(_assemblyCard))
+            {
                 card.transform.position = _assemblyCard.position;
+                _isCardSnap = true;
+            }
             else
+            {
                 card.transform.position = data.position;
+                _isCardSnap = false;
+            }
         }
     }
 }
