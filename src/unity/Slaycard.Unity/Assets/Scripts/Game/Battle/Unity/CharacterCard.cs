@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace Game.Battle
+namespace Game.Unity.Battle
 {
     public class CharacterCard : MonoBehaviour
     {

@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Game.Battle
+namespace Game.Unity.Battle
 {
     public class ActionCard : MonoBehaviour,
         IPointerDownHandler,

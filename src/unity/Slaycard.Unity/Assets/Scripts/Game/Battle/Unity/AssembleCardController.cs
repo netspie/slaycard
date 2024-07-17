@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Game.Battle
+namespace Game.Unity.Battle
 {
     public class AssembleCardController
     {
@@ -21,7 +21,7 @@ namespace Game.Battle
 
         private List<GameObject> _temporaryObjects = new();
 
-        private RectTransform _assemblyCard;
+        private RectTransform _assemblyPhantomCard;
         private bool _isCardSnap;
 
         public AssembleCardController(
@@ -46,7 +46,6 @@ namespace Game.Battle
         {
             _originalPos = card.transform.position;
             _originalParent = card.transform.parent.GetComponent<Transform>();
-
             _originalIndex = card.transform.GetSiblingIndex();
 
             var cardPhantom = Object.Instantiate(_cardPhantomPrefab, _originalParent);
@@ -54,8 +53,8 @@ namespace Game.Battle
             Object.Destroy(cardPhantom.GetComponent<Image>());
             _temporaryObjects.Add(cardPhantom.gameObject);
 
-            _assemblyCard = Object.Instantiate(_cardPhantomPrefab, _assemblyField).GetComponent<RectTransform>();
-            _temporaryObjects.Add(_assemblyCard.gameObject);
+            _assemblyPhantomCard = Object.Instantiate(_cardPhantomPrefab, _assemblyField).GetComponent<RectTransform>();
+            _temporaryObjects.Add(_assemblyPhantomCard.gameObject);
 
             card.transform.SetParent(_dragArea, true);
         }
@@ -64,13 +63,14 @@ namespace Game.Battle
         {
             if (_isCardSnap)
             {
-                Object.Destroy(card.gameObject);
+                Object.Destroy(_assemblyPhantomCard.gameObject);
             }
             else
             {
                 card.transform.position = _originalPos;
                 card.transform.SetParent(_originalParent, true);
                 card.transform.SetSiblingIndex(_originalIndex);
+
                 _temporaryObjects.ForEach(Object.Destroy);
             }
 
@@ -79,9 +79,9 @@ namespace Game.Battle
 
         private void OnCardDrag(ActionCard card, PointerEventData data)
         {
-            if (data.position.IsInRect(_assemblyCard))
+            if (data.position.IsInRect(_assemblyPhantomCard))
             {
-                card.transform.position = _assemblyCard.position;
+                card.transform.position = _assemblyPhantomCard.position;
                 _isCardSnap = true;
             }
             else

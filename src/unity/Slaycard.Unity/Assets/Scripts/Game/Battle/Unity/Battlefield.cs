@@ -4,7 +4,7 @@ using System.Linq;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
-namespace Game.Battle
+namespace Game.Unity.Battle
 {
     public class Battlefield : MonoBehaviour
     {

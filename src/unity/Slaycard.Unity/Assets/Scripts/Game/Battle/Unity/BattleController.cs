@@ -1,7 +1,7 @@
 ﻿using Game.Battle.UseCases.Queries;
 using UnityEngine;
 
-namespace Game.Battle
+namespace Game.Unity.Battle
 {
     public class BattleController : MonoBehaviour
     {
