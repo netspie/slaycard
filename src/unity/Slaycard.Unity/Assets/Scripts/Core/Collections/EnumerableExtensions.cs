@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+
+using System.Collections.Generic;
 using System;
 using System.Linq;
 
@@ -6,6 +8,15 @@ namespace Core.Collections
 {
     public static class EnumerableExtensions
     {
+        public static T? FirstOfType<T>(this IEnumerable<object> enumerable) =>
+            enumerable.OfType<T>().FirstOrDefault();
+
+        public static T SingleOfType<T>(this IEnumerable<object> enumerable) =>
+            enumerable.OfType<T>().SingleOrDefault();
+
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable) =>
+            enumerable is null || enumerable.Count() <= 0;
+
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> enumerable, Action<T> itemAction)
         {
             if (enumerable == null)
