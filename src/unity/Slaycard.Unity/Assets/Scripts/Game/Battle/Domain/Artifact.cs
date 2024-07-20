@@ -2,6 +2,7 @@
 
 using Core.Domain;
 using Game.Battle.Domain.Artifacts;
+using System;
 
 namespace Game.Battle.Domain
 {
@@ -17,8 +18,9 @@ namespace Game.Battle.Domain
         }
 
         public abstract void ApplyToTarget(
-            StatisticsGroup origin,
-            StatisticsGroup target);
+            StatGroup origin,
+            StatGroup target, 
+            Random? random = null);
 
         public virtual AssembleArtifactResult Assemble(Artifact target) =>
             AssembleArtifactResult.Default;

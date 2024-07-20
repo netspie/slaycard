@@ -1,5 +1,7 @@
 ﻿#nullable enable
 
+using System;
+
 namespace Game.Battle.Domain.Artifacts
 {
     public class EnergyArtifact : Artifact
@@ -14,18 +16,10 @@ namespace Game.Battle.Domain.Artifacts
             Level = level;
         }
 
-        public override void ApplyToTarget(StatisticsGroup origin, StatisticsGroup target)
+        public override void ApplyToTarget(StatGroup origin, StatGroup target, Random? random = null)
         {
             
         }
-
-        public override AssembleArtifactResult Assemble(StatisticsGroup origin, Artifact target)
-        {
-            return AssembleArtifactResult.Default;
-        }
-
-        public virtual bool CanAssemble(Artifact target) =>
-            false;
     }
 
     public enum EnergyLevel

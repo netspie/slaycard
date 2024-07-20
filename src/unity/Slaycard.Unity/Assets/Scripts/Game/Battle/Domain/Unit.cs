@@ -12,8 +12,8 @@ namespace Game.Battle.Domain
     {
         public UnitId Id { get; init; }
 
-        public StatisticsGroup BaseStats { get; private set; }
-        public StatisticsGroup CombatStats { get; private set; }
+        public StatGroup BaseStats { get; private set; }
+        public StatGroup CombatStats { get; private set; }
 
         //public AssemblySpace? AssemblySpace { get; private set; }
 
@@ -49,7 +49,7 @@ namespace Game.Battle.Domain
             else
             if (targetArtifact is not null)
             {
-                var result = originArtifact.Assemble(targetArtifact);
+                var result = targetArtifact.Assemble(originArtifact);
                 if (result.Artifact is null)
                     throw new Exception("cant_assemble_with_this_art");
 
