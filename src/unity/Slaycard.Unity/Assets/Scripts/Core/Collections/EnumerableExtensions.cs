@@ -8,6 +8,9 @@ namespace Core.Collections
 {
     public static class EnumerableExtensions
     {
+        public static T[] AsArray<T>(this T @object) =>
+            new T[] { @object };
+
         public static T? FirstOfType<T>(this IEnumerable<object> enumerable) =>
             enumerable.OfType<T>().FirstOrDefault();
 

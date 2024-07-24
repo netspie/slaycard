@@ -1,5 +1,8 @@
 ﻿#nullable enable
 
+using Core.Collections;
+using Core.Domain;
+using Game.Battle.Domain.Events;
 using System;
 
 namespace Game.Battle.Domain.Artifacts
@@ -14,22 +17,31 @@ namespace Game.Battle.Domain.Artifacts
 
         public AttackArtifact(ArtifactId id, Chance chance) : base(id, chance) {}
 
-        public override void ApplyToTarget(StatGroup origin, StatGroup target, Random? random = null)
+        public override IDomainEvent[] ApplyToTarget(
+            ApplyArtifactArgs args, Random? random = null)
         {
-            var isHit = CombatFormulas.CalculateIfHit(Accuracy, target.Dodge, random);
-            if (!isHit)
-                return; // return missed event
+            var origin = args.OriginUnit;
+            var originStats = origin.CombatStats;
 
-            var damage = CombatFormulas.CalculateDamage(Accuracy, target.Dodge, out var damageRange, random);
-            var isCritic = CombatFormulas.CalculateIfCriticHit(Critics, target.Critics, out var criticsChance, random);
+            var target = args.TargetUnits[0];
+            var targetStats = target.CombatStats;
+
+            var isHit = CombatFormulas.CalculateIfHit(Accuracy, targetStats.Dodge, random);
+            if (!isHit)
+                return new MissedEvent(
+                    args.BattleId, args.OriginPlayer.Id, origin.Id, target.Id).AsArray();
+
+            var damage = CombatFormulas.CalculateDamage(Accuracy, targetStats.Dodge, out var damageRange, random);
+            var isCritic = CombatFormulas.CalculateIfCriticHit(Critics, targetStats.Critics, out var criticsChance, random);
             damage = isCritic ? CombatFormulas.CalculateCriticalDamage(damage, random) : damage;
 
-            var damagePercent = damage / target.Defence.CalculatedValue;
+            var damagePercent = damage / targetStats.Defence.CalculatedValue;
 
-            origin.Energy.Modify(EnergyRequired.CalculatedValue, "attack");
-            target.HP.Modify(damagePercent, "attack");
+            originStats.Energy.Modify(EnergyRequired.CalculatedValue, nameof(AttackArtifact));
+            targetStats.HP.Modify(damagePercent, nameof(AttackArtifact));
 
-            // return damaged/dealt/ event
+            return new DamagedEvent(
+                args.BattleId, args.OriginPlayer.Id, origin.Id, target.Id, damagePercent).AsArray();
         }
 
         public override AssembleArtifactResult Assemble(Artifact artifact)

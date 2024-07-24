@@ -73,8 +73,8 @@ public static class PlayerExtensions
         string targetUnitCardId)
     {
         var originPlayer = players.OfId(originPlayerId);
-
         var targetPlayer = players.OfId(targetPlayerId);
+
         targetPlayer.ApplyActionCard(
             originPlayer, originUnitId, actionCardId, targetUnitCardId);
     }
@@ -86,8 +86,8 @@ public static class PlayerExtensions
 
 public class Unit
 {
-    public StatisticsGroup BaseStatistics { get; private set; }
-    public StatisticsGroup DerivativeStatistics { get; private set; }
+    public DerivativeStatisticsPointGroup BaseStatistics { get; private set; }
+    public DerivativeStatisticsPointGroup DerivativeStatistics { get; private set; }
 
     public AssemblySpace AssemblySpace { get; private set; }
     public ActionRow ActionRow { get; private set; }
@@ -128,14 +128,28 @@ public static class UnitExtensions
        default;
 }
 
-public class StatisticsGroup
+public class DerivativeStatisticsPointGroup
 {
-
+    public StatisticPoint Vitality { get; private set; } = new();
+    public StatisticPoint Strength { get; private set; } = new();
+    public StatisticPoint Power { get; private set; } = new();
+    public StatisticPoint Perception { get; private set; } = new();
+    public StatisticPoint Mobility { get; private set; } = new();
 }
 
-public class Statistic
+public class BaseStatisticsPointGroup
 {
+    public StatisticPoint Vitality { get; private set; } = new();
+    public StatisticPoint Strength { get; private set; } = new();
+    public StatisticPoint Power { get; private set; } = new();
+    public StatisticPoint Perception { get; private set; } = new();
+    public StatisticPoint Mobility { get; private set; } = new();
+    public StatisticPoint Mind { get; private set; } = new();
+}
 
+public class StatisticPoint
+{
+    
 }
 
 public class AssemblySpace
@@ -149,8 +163,8 @@ public class AssemblySpace
 public abstract class ActionCard
 {
     public abstract void ApplyToTarget(
-        StatisticsGroup origin,
-        StatisticsGroup target);
+        DerivativeStatisticsPointGroup origin,
+        DerivativeStatisticsPointGroup target);
 }
 
 public class MeleeAttackAction : ActionCard
@@ -158,8 +172,8 @@ public class MeleeAttackAction : ActionCard
     public int Damage { get; private set; }
 
     public override void ApplyToTarget(
-        StatisticsGroup origin,
-        StatisticsGroup target)
+        DerivativeStatisticsPointGroup origin,
+        DerivativeStatisticsPointGroup target)
     {
         //origin.DamageTarget(target, Damage)
     }
@@ -170,8 +184,8 @@ public class MagicMissileAttackAction : ActionCard
     public int Damage { get; private set; }
 
     public override void ApplyToTarget(
-        StatisticsGroup origin,
-        StatisticsGroup target)
+        DerivativeStatisticsPointGroup origin,
+        DerivativeStatisticsPointGroup target)
     {
         //origin.DamageTarget(target, Damage)
     }

@@ -17,9 +17,8 @@ namespace Game.Battle.Domain
             Chance = chance;
         }
 
-        public abstract void ApplyToTarget(
-            StatGroup origin,
-            StatGroup target, 
+        public abstract IDomainEvent[] ApplyToTarget(
+            ApplyArtifactArgs args,
             Random? random = null);
 
         public virtual AssembleArtifactResult Assemble(Artifact target) =>
@@ -30,6 +29,13 @@ namespace Game.Battle.Domain
     }
 
     public record ArtifactId(string Value);
+
+    public record ApplyArtifactArgs(
+        BattleId BattleId,
+        Player OriginPlayer,
+        Unit OriginUnit,
+        Player TargetPlayer,
+        Unit[] TargetUnits);
 
     public enum ArtifactType
     {

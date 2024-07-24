@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using Core.Domain;
 using System;
 
 namespace Game.Battle.Domain.Artifacts
@@ -16,9 +17,9 @@ namespace Game.Battle.Domain.Artifacts
             Level = level;
         }
 
-        public override void ApplyToTarget(StatGroup origin, StatGroup target, Random? random = null)
+        public override IDomainEvent[] ApplyToTarget(ApplyArtifactArgs args, Random? random = null)
         {
-            
+            return Array.Empty<IDomainEvent>();
         }
     }
 
