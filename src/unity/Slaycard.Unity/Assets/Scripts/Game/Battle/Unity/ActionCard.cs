@@ -1,4 +1,5 @@
-﻿using Game.Battle.UseCases.Queries;
+﻿using Game.Battle.Unity;
+using Game.Battle.UseCases.Queries;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -7,12 +8,10 @@ using UnityEngine.EventSystems;
 
 namespace Game.Unity.Battle
 {
-    public class ActionCard : MonoBehaviour,
-        IPointerDownHandler,
-        IPointerUpHandler,
-        IDragHandler
+    public class ActionCard : MonoBehaviour
     {
         [SerializeField] private TMP_Text _nameText;
+        [SerializeField] private CardButton _button;
 
         private RectTransform _rt;
 
@@ -35,26 +34,13 @@ namespace Game.Unity.Battle
             return go;
         }
 
-        private List<Action<ActionCard, PointerEventData>> _onDragStartHandlers = new();
-        private List<Action<ActionCard, PointerEventData>> _onDrag = new();
-        private List<Action<ActionCard, PointerEventData>> _onDragEndHandlers = new();
-
         public void OnDragStart(Action<ActionCard, PointerEventData> action) =>
-            _onDragStartHandlers.Add(action);
+            _button.OnDragStart(data => action(this, data));
 
         public void OnDrag(Action<ActionCard, PointerEventData> action) =>
-            _onDrag.Add(action);
+            _button.OnDrag(data => action(this, data));
 
         public void OnDragEnd(Action<ActionCard, PointerEventData> action) =>
-            _onDragEndHandlers.Add(action);
-
-        void IPointerDownHandler.OnPointerDown(PointerEventData data) =>
-            _onDragStartHandlers.ForEach(h => h(this, data));
-
-        void IPointerUpHandler.OnPointerUp(PointerEventData data) =>
-            _onDragEndHandlers.ForEach(h => h(this, data));
-
-        void IDragHandler.OnDrag(PointerEventData data) =>
-            _onDrag.ForEach(h => h(this, data));
+            _button.OnDragEnd(data => action(this, data));
     }
 }

@@ -72,9 +72,9 @@ namespace Game.Battle.Domain
             Unit originUnit,
             Artifact artifact)
         {
-            artifact.ApplyToTarget(
-                originUnit.CombatStats,
-                CombatStats);
+            //artifact.ApplyToTarget(
+            //    originUnit.CombatStats,
+            //    CombatStats);
         }
     }
 
