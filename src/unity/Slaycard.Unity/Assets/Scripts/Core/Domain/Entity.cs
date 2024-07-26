@@ -46,6 +46,9 @@ namespace Core.Domain
             where TEntity : IEntity<TId>
             where TId : class =>
             source.FirstOrDefault(x => x.Id == id) ?? default;
+
+        public static TId[] GetIds<TId>(this IEnumerable<IEntity<TId>> source) =>
+            source.Select(item => item.Id).ToArray();
     }
 
     public interface IDomainEvent

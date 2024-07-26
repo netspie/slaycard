@@ -35,7 +35,7 @@ namespace Game.Battle.Domain
             ArtifactId? targetArtifactId = null,
             int? assemblyIndex = null)
         {
-            var max = PassiveSkills.SingleOfType<MaxAssArtsPS>().MaxAssembledArtifacts;
+            var max = PassiveSkills.SingleOfType<MaxAssembledArtifactsPassiveSkill>().MaxAssembledArtifacts;
             if (targetArtifactId is null && AssembledArtifacts.Count >= max)
                 throw new Exception("max_ass_arts_reached");
 
@@ -64,7 +64,7 @@ namespace Game.Battle.Domain
         public void GenerateArtifacts()
         {
             // TO DO: only once per turn or when have extra by skill or item?
-            //var maxArtifacts = PassiveSkills.GetSingleOfType<MaxGenArtsPS>()
+            //var maxArtifacts = PassiveSkills.GetSingleOfType<MaxGeneratedArtifactsPassiveSkill>()
 
         }
 

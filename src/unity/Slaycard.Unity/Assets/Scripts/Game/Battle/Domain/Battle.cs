@@ -1,6 +1,8 @@
 ﻿#nullable enable
 
 using Core.Domain;
+using Game.Battle.Domain.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,10 +11,28 @@ namespace Game.Battle.Domain
     public class Battle : Entity<BattleId>
     {
         public Player[] Players { get; private set; }
+        public PlayerId[]? UnitsMoveOrder { get; private set; }
+        public PlayerActionController PlayerActionController { get; private set; } = new();
 
         public Battle(BattleId id, IEnumerable<Player> players) : base(id)
         {
             Players = players.ToArray();
+            PlayerActionController.SetActionExpectedNext(nameof(Start)).By(Players.GetIds());
+        }
+
+        public void Start(PlayerId playerId)
+        {
+            if (!PlayerActionController.CanMakeAction(nameof(Start), playerId))
+                throw new Exception("cant_start_the_battle_again");
+
+            AddEvent(new PlayerStartedBattleEvent(
+                Id, playerId));
+
+            PlayerActionController
+                .SetActionDone(nameof(Start), playerId)
+                .SetActionExpectedNext(nameof(AssembleArtifacts), ActionRepeat.Multiple)
+                .SetActionExpectedNext(nameof(ApplyArtifact), ActionRepeat.Multiple)
+                .SetActionExpectedNext(nameof(Pass));
         }
 
         public void AssembleArtifacts(
@@ -31,7 +51,7 @@ namespace Game.Battle.Domain
         }
 
         // Change so it supports area/group applies
-        public void UseSkill(
+        public void ApplyArtifact(
             PlayerId originPlayerId,
             UnitId originUnitId,
             ArtifactId artifactId,

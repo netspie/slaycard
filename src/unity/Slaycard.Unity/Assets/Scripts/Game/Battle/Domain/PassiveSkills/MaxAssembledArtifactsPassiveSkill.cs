@@ -3,11 +3,11 @@
     /// <summary>
     /// Maximum assembled artifacts passive skill
     /// </summary>
-    public record MaxAssArtsPS : PassiveSkill
+    public record MaxAssembledArtifactsPassiveSkill : PassiveSkill
     {
         public int MaxAssembledArtifacts { get; }
 
-        public MaxAssArtsPS(int maxAssembledArtifacts) 
+        public MaxAssembledArtifactsPassiveSkill(int maxAssembledArtifacts) 
         {
             MaxAssembledArtifacts = maxAssembledArtifacts;
         }

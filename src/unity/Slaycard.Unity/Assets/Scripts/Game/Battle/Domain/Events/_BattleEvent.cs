@@ -1,4 +1,6 @@
-﻿using Core.Domain;
+﻿#nullable enable
+
+using Core.Domain;
 using System;
 
 namespace Game.Battle.Domain.Events

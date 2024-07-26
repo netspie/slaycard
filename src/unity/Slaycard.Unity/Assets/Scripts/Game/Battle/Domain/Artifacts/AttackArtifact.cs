@@ -4,7 +4,6 @@ using Core.Collections;
 using Core.Domain;
 using Game.Battle.Domain.Events;
 using System;
-using System.Collections.Generic;
 
 namespace Game.Battle.Domain.Artifacts
 {
@@ -40,14 +39,6 @@ namespace Game.Battle.Domain.Artifacts
 
             originStats.Energy.Modify(EnergyRequired.CalculatedValue, nameof(AttackArtifact));
             targetStats.HP.Modify(damagePercent, nameof(AttackArtifact));
-
-            var squares = new Dictionary<(int Row, int Column), HashSet<int>>();
-            var n = 2;
-            var s = (3 / 3, 3 / 3);
-            if (squares[s].Contains(n))
-                return null;
-
-            squares[s].Add(n);
 
             return new DamagedEvent(
                 args.BattleId, args.OriginPlayer.Id, origin.Id, target.Id, damagePercent).AsArray();

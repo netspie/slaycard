@@ -1,4 +1,6 @@
-﻿namespace Game.Battle.Domain.Events
+﻿#nullable enable
+
+namespace Game.Battle.Domain.Events
 {
     public record MissedEvent(
         BattleId BattleId,
