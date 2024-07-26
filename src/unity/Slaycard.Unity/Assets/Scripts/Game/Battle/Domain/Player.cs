@@ -2,6 +2,7 @@
 
 using Core.Domain;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Game.Battle.Domain
 {
@@ -71,5 +72,8 @@ namespace Game.Battle.Domain
             var player = players.GetOfId(playerId);
             return player.AssembleArtifacts(unitId,  originArtifactId, targetArtifactId);
         }
+
+        public static Unit[] GetUnits(this IEnumerable<Player> players) =>
+            players.SelectMany(player => player.Units).ToArray();
     }
 }

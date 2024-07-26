@@ -1,27 +1,31 @@
-﻿using Core.Collections;
+﻿#nullable enable
+
+using Core.Collections;
 using System;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace Game.Battle.Domain
 {
-    public class PlayerActionController : IActionController
+    public class ActionController<TId> : IActionController<TId>
+        where TId : class
     {
         private bool _canSetMore;
 
-        public ActionInfo ActionInfo { get; private set; } = new();
+        public ActionInfo<TId> ActionInfo { get; private set; } = new();
 
-        public PlayerActionController() { }
-        public PlayerActionController(Delegate @delegate) =>
+        public ActionController() { }
+        public ActionController(Delegate @delegate) =>
             SetActionExpectedNext(@delegate.Method.Name);
 
-        public PlayerActionController(string actionName) =>
+        public ActionController(string actionName) =>
             SetActionExpectedNext(actionName);
 
         public bool IsUserAction() =>
             !ActionInfo.ExpectedPlayers.IsNullOrEmpty() &&
             ActionInfo.Actions.All(a => a.IsUserAction);
 
-        public IChainedOperation SetActionDone(string name, PlayerId? userId = null)
+        public IChainedOperation<TId> SetActionDone(string name, TId? userId = null)
         {
             _canSetMore = false;
 
@@ -56,7 +60,7 @@ namespace Game.Battle.Domain
             return this.Success();
         }
 
-        public IChainedOperation SetActionExpectedNext(string name, ActionRepeat repeat = default)
+        public IChainedOperation<TId> SetActionExpectedNext(string name, ActionRepeat repeat = default)
         {
             if (!ActionInfo.HasDoneActions())
                 return this.Success();
@@ -65,13 +69,13 @@ namespace Game.Battle.Domain
 
             ActionInfo = new()
             {
-                Actions = new[] { new ActionData(name, IsUserAction: false, DoneBefore: false, Array.Empty<PlayerId>(), repeat) },
+                Actions = new[] { new ActionData<TId>(name, IsUserAction: false, DoneBefore: false, Array.Empty<TId>(), repeat) },
             };
 
             return this.Success();
         }
 
-        public IChainedOperation Or(string name, ActionRepeat repeat = default)
+        public IChainedOperation<TId> Or(string name, ActionRepeat repeat = default)
         {
             if (!_canSetMore)
                 return this.Success();
@@ -79,15 +83,15 @@ namespace Game.Battle.Domain
             ActionInfo = new()
             {
                 Actions = ActionInfo.Actions.Append(
-                       new(name, IsUserAction: false, DoneBefore: false, Array.Empty<PlayerId>(), repeat)).ToArray(),
+                       new(name, IsUserAction: false, DoneBefore: false, Array.Empty<TId>(), repeat)).ToArray(),
             };
 
             return this.Success();
         }
 
-        public bool CanMakeAction(string name, PlayerId? user = null) => ActionInfo.CanMakeAction(name, user);
+        public bool CanMakeAction(string name, TId? user = null) => ActionInfo.CanMakeAction(name, user);
 
-        public IChainedOperation By(PlayerId[] userIds, bool mustObeyOrder = false)
+        public IChainedOperation<TId> By(TId[] userIds, bool mustObeyOrder = false)
         {
             if (!ActionInfo.HasActions())
                 return this.Failure();
@@ -98,7 +102,7 @@ namespace Game.Battle.Domain
             ActionInfo = new()
             {
                 Actions = ActionInfo.Actions.Select(a =>
-                    new ActionData(a.Name, IsUserAction: true, a.DoneBefore, a.AlreadyMadeActionByPlayers, a.Repeat)).ToArray(),
+                    new ActionData<TId>(a.Name, IsUserAction: true, a.DoneBefore, a.AlreadyMadeActionByPlayers, a.Repeat)).ToArray(),
 
                 ExpectedPlayers = userIds,
                 MustObeyOrder = mustObeyOrder,
@@ -108,58 +112,61 @@ namespace Game.Battle.Domain
         }
     }
 
-    public interface IActionController
+    public interface IActionController<TId>
+        where TId : class
     {
         #region By Name String
 
-        IChainedOperation SetActionDone(string name, PlayerId? userId = null);
-        IChainedOperation SetActionExpectedNext(string name, ActionRepeat repeat = default);
-        IChainedOperation Or(string name, ActionRepeat repeat = default);
-        bool CanMakeAction(string name, PlayerId? user = null);
+        IChainedOperation<TId> SetActionDone(string name, TId? userId = null);
+        IChainedOperation<TId> SetActionExpectedNext(string name, ActionRepeat repeat = default);
+        IChainedOperation<TId> Or(string name, ActionRepeat repeat = default);
+        bool CanMakeAction(string name, TId? user = null);
 
         #endregion
 
         #region By Name Delegate
 
-        IChainedOperation SetActionDone(Delegate @delegate, PlayerId? userId = null) => SetActionDone(@delegate.Method.Name, userId);
-        IChainedOperation SetActionExpectedNext(Delegate @delegate, ActionRepeat repeat = default) => SetActionExpectedNext(@delegate.Method.Name, repeat);
-        IChainedOperation Or(Delegate @delegate, ActionRepeat repeat = default) => Or(@delegate.Method.Name, repeat);
-        bool CanMakeAction(Delegate @delegate, PlayerId? user = null) => CanMakeAction(@delegate.Method.Name, user);
+        IChainedOperation<TId> SetActionDone(Delegate @delegate, TId? userId = null) => SetActionDone(@delegate.Method.Name, userId);
+        IChainedOperation<TId> SetActionExpectedNext(Delegate @delegate, ActionRepeat repeat = default) => SetActionExpectedNext(@delegate.Method.Name, repeat);
+        IChainedOperation<TId> Or(Delegate @delegate, ActionRepeat repeat = default) => Or(@delegate.Method.Name, repeat);
+        bool CanMakeAction(Delegate @delegate, TId? user = null) => CanMakeAction(@delegate.Method.Name, user);
 
         #endregion
 
         #region Other
 
-        IChainedOperation By(PlayerId[] userIds, bool mustObeyOrder = false);
+        IChainedOperation<TId> By(TId[] userIds, bool mustObeyOrder = false);
         bool IsUserAction();
 
-        ActionInfo ActionInfo { get; }
+        ActionInfo<TId> ActionInfo { get; }
 
         #endregion
     }
 
-    public interface IChainedOperation : IActionController
+    public interface IChainedOperation<TId> : IActionController<TId>
+        where TId : class
     {
         bool IsSuccess { get; }
     }
 
-    public class ChainedOperation : IChainedOperation
+    public class ChainedOperation<TId> : IChainedOperation<TId>
+        where TId : class
     {
-        private readonly IActionController _controller;
+        private readonly IActionController<TId> _controller;
 
         public ChainedOperation(
-            IActionController controller, bool isSuccess)
+            IActionController<TId> controller, bool isSuccess)
         {
             _controller = controller;
             IsSuccess = isSuccess;
         }
 
-        public static void Create(IActionController controller, bool isSuccess) =>
-            new ChainedOperation(controller, isSuccess);
+        public static void Create(IActionController<TId> controller, bool isSuccess) =>
+            new ChainedOperation<TId>(controller, isSuccess);
 
         public bool IsSuccess { get; }
 
-        public IChainedOperation SetActionDone(string name, PlayerId? userId = null)
+        public IChainedOperation<TId> SetActionDone(string name, TId? userId = null)
         {
             if (!IsSuccess)
                 ;// return this;
@@ -167,7 +174,7 @@ namespace Game.Battle.Domain
             return _controller.SetActionDone(name, userId);
         }
 
-        public IChainedOperation SetActionExpectedNext(string name, ActionRepeat repeat = default)
+        public IChainedOperation<TId> SetActionExpectedNext(string name, ActionRepeat repeat = default)
         {
             if (!IsSuccess)
                 ;// return this;
@@ -175,10 +182,10 @@ namespace Game.Battle.Domain
             return _controller.SetActionExpectedNext(name, repeat);
         }
 
-        public bool CanMakeAction(string name, PlayerId? user = null) =>
+        public bool CanMakeAction(string name, TId? user = null) =>
             _controller.CanMakeAction(name, user);
 
-        public IChainedOperation By(PlayerId[] userIds, bool mustObeyOrder = false)
+        public IChainedOperation<TId> By(TId[] userIds, bool mustObeyOrder = false)
         {
             if (!IsSuccess)
                 ;// return this;
@@ -186,7 +193,7 @@ namespace Game.Battle.Domain
             return _controller.By(userIds, mustObeyOrder);
         }
 
-        public IChainedOperation Or(string name, ActionRepeat repeat = ActionRepeat.Single)
+        public IChainedOperation<TId> Or(string name, ActionRepeat repeat = ActionRepeat.Single)
         {
             if (!IsSuccess)
                 ;// return this;
@@ -196,16 +203,16 @@ namespace Game.Battle.Domain
 
         public bool IsUserAction() => _controller.IsUserAction();
 
-        public ActionInfo ActionInfo => _controller.ActionInfo;
+        public ActionInfo<TId> ActionInfo => _controller.ActionInfo;
     }
 
     public static class ChainedOperationExtensions
     {
-        public static IChainedOperation Success(this IActionController controller) =>
-            new ChainedOperation(controller, true);
+        public static IChainedOperation<TId> Success<TId>(this IActionController<TId> controller) where TId : class =>
+            new ChainedOperation<TId>(controller, true);
 
-        public static IChainedOperation Failure(this IActionController controller) =>
-            new ChainedOperation(controller, false);
+        public static IChainedOperation<TId> Failure<TId>(this IActionController<TId> controller) where TId : class =>
+            new ChainedOperation<TId>(controller, false);
     }
 
     public enum ActionRepeat
@@ -214,13 +221,14 @@ namespace Game.Battle.Domain
         Multiple
     }
 
-    public class ActionInfo
+    public class ActionInfo<TId>
+        where TId : class
     {
-        public ActionData[] Actions { get; init; } = Array.Empty<ActionData>();
+        public ActionData<TId>[] Actions { get; init; } = Array.Empty<ActionData<TId>>();
         public bool MustObeyOrder { get; init; }
-        public PlayerId[] ExpectedPlayers { get; init; } = Array.Empty<PlayerId>();
+        public TId[] ExpectedPlayers { get; init; } = Array.Empty<TId>();
 
-        public bool CanMakeAction(string name, PlayerId? userId = null)
+        public bool CanMakeAction(string name, TId? userId = null)
         {
             if (name.IsNullOrEmpty())
                 return false;
@@ -298,23 +306,23 @@ namespace Game.Battle.Domain
         public bool HasAction(string name) =>
             Actions.Any(a => a.Name == name);
 
-        public bool HasUser(PlayerId userId) =>
+        public bool HasUser(TId userId) =>
             ExpectedPlayers.Contains(userId);
 
         public bool RequiresUserAction() => ExpectedPlayers.Any();
 
-        public ActionData GetAction(string name) =>
+        public ActionData<TId> GetAction(string name) =>
             Actions.FirstOrDefault(a => a.Name == name);
 
         public string[] GetActionNames() =>
             Actions.Select(a => a.Name).ToArray();
     }
 
-    public record ActionData(
+    public record ActionData<TId>(
         string Name,
         bool IsUserAction,
         bool DoneBefore,
-        PlayerId[] AlreadyMadeActionByPlayers,
-        ActionRepeat Repeat = default);
-
+        TId?[] AlreadyMadeActionByPlayers,
+        ActionRepeat Repeat = default)
+        where TId : class;
 }
