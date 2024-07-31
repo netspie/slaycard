@@ -13,6 +13,9 @@ React, Asp.Net Core
 
 ### Inspiration Design
 
+#### Video Example
+https://youtu.be/zuFsbwtB5ro
+
 *The card graphics are random, but serves as a general view*  
   
 ![img](https://github.com/netspie/slaycard-docs/blob/main/img/demo/demo-img.png))
