@@ -11,9 +11,13 @@ Slaycard is turn-based combat game where you can manage your team of characters 
 ### Technologies
 React, Asp.Net Core
 
-### Inspiration Design
+### Inspiration/Initial Design
 
-#### Video Example
+#### Demo Web App 
+
+https://slaycard.vercel.app/combats/xyz
+
+#### Video
 https://youtu.be/zuFsbwtB5ro
 
 *The card graphics are random, but serves as a general view*  
