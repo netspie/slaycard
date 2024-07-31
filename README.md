@@ -10,3 +10,9 @@ Slaycard is turn-based combat game where you can manage your team of characters 
 
 ### Technologies
 React, Asp.Net Core
+
+### Inspiration Design
+
+*The card graphics are random, but serves as a general view*  
+  
+![img](https://github.com/netspie/slaycard-docs/blob/main/img/demo/demo-img.png))
