@@ -14,6 +14,7 @@ export interface DropElement {
   ref: RefObject<HTMLDivElement>;
   onDragEnter?: () => void;
   onDragExit?: () => void;
+  onDrop?: () => void;
 }
 
 type ElementData = {
@@ -56,13 +57,7 @@ const useMouseDrag = (
       var el = target?.ref.current;
       if (!target || !el) return;
 
-      var rect = el.getBoundingClientRect();
-      if (
-        ev.clientX > rect.left &&
-        ev.clientX < rect.left + rect.width &&
-        ev.clientY > rect.top &&
-        ev.clientY < rect.top + rect.height
-      ) {
+      if (IsInRect(ev.clientX, ev.clientY, el)) {
         target.onDragEnter && target.onDragEnter();
       } else {
         target.onDragExit && target.onDragExit();
@@ -70,11 +65,11 @@ const useMouseDrag = (
     });
   };
 
-  const onMouseUp = () => {
+  const onMouseUp = (ev: MouseEvent) => {
     if (!ref.current) return;
 
     window.removeEventListener("mousemove", onMouseMove);
-    ref.current.removeEventListener("mouseup", onMouseUp);
+    window.removeEventListener("mouseup", onMouseUp);
 
     ref.current.style.position = "relative";
 
@@ -84,6 +79,15 @@ const useMouseDrag = (
     ref.current.style.zIndex = `${data.z}`;
 
     setSelectedActionCard(false);
+
+    targets.forEach((target) => {
+      var el = target?.ref.current;
+      if (!target || !el) return;
+
+      if (IsInRect(ev.clientX, ev.clientY, el)) {
+        target.onDrop && target.onDrop();
+      }
+    });
   };
 
   const onMouseDown = () => {
@@ -98,7 +102,6 @@ const useMouseDrag = (
     });
 
     ref.current.style.zIndex = "1000";
-
     setSelectedActionCard(true);
   };
 
@@ -113,8 +116,18 @@ const useMouseDrag = (
     if (!isSelectedActionCard) return;
 
     window.addEventListener("mousemove", onMouseMove);
-    ref.current.addEventListener("mouseup", onMouseUp);
+    window.addEventListener("mouseup", onMouseUp);
   }, [isSelectedActionCard]);
 };
+
+function IsInRect(x: number, y: number, el: HTMLDivElement): boolean {
+  var rect = el.getBoundingClientRect();
+  return (
+    x > rect.left &&
+    x < rect.left + rect.width &&
+    y > rect.top &&
+    y < rect.top + rect.height
+  );
+}
 
 export default useMouseDrag;

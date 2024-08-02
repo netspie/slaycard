@@ -3,6 +3,7 @@
 import { useCardSelectionState } from "@/app/state/CardSelectedState";
 import {
   forwardRef,
+  RefObject,
   useEffect,
   useImperativeHandle,
   useRef,
@@ -11,7 +12,6 @@ import {
 import Image from "next/image";
 import { strToBorderColor, strToShadowColor } from "./ActionCard";
 import { DropElement } from "../core/transform/UseMouseDrag";
-import { isatty } from "tty";
 
 export interface CardRef extends DropElement {
   el: HTMLDivElement | undefined;
@@ -30,11 +30,52 @@ export type CardProps = {
   onSelected?: (card: CardProps) => void;
 };
 
+const pushText = (spanRef: RefObject<HTMLSpanElement>, text: string) => {
+  const span = spanRef.current;
+  if (!span) return;
+
+  span.innerText = text;
+
+  const durationMs = 2000;
+
+  span.style.opacity = "1";
+  span.style.left = "0px";
+  span.style.transitionDuration = `0ms`;
+  span.style.transitionTimingFunction = "cubic-bezier(0.4, 0, 0.2, 1)";
+  span.style.transform = "translateY(0px)";
+
+  setTimeout(() => {
+    if (!span) return;
+    span.style.transitionDuration = `${durationMs}ms`;
+    span.style.transitionProperty = `transform, opacity`;
+    span.style.transitionTimingFunction = "cubic-bezier(0, 0, 0.2, 1)";
+    span.style.transform = "translateY(-150px)";
+  }, 0);
+
+  setTimeout(() => {
+    if (!span) return;
+    span.style.opacity = "0";
+  }, durationMs / 2);
+};
+
+const shakeElement = (ref: RefObject<HTMLElement>) => {
+  const el = ref.current;
+  if (!el) return;
+
+  el.style.animation = "shake 0.25s";
+  setTimeout(() => {
+    if (!el) return;
+    el.style.animation = "";
+  }, 250);
+};
+
 export const Card = forwardRef<CardRef, CardProps>((props, fRef) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isSelectedLocal, setSelectedLocal] = useState(false);
   const { isSelected, setSelected } = useCardSelectionState();
   const [isArtifactOver, setArtifactOver] = useState(false);
+
+  const faderTextRef = useRef<HTMLSpanElement>(null);
 
   useImperativeHandle(
     fRef,
@@ -45,6 +86,14 @@ export const Card = forwardRef<CardRef, CardProps>((props, fRef) => {
         ref: ref,
         onDragEnter: () => setArtifactOver(true),
         onDragExit: () => setArtifactOver(false),
+        onDrop: () => {
+          setArtifactOver(false);
+          pushText(
+            faderTextRef,
+            `-${Math.floor(Math.random() * 100).toString()}`
+          );
+          shakeElement(ref);
+        },
       };
     },
     [fRef]
@@ -195,6 +244,14 @@ export const Card = forwardRef<CardRef, CardProps>((props, fRef) => {
       {isArtifactOver && (
         <div className="hover-effect w-full h-full bg-white opacity-20" />
       )}
+      <div className="absolute w-full h-full flex items-center justify-center z-[9999]">
+        <span
+          ref={faderTextRef}
+          className="text-red-500 font-bold text-2xl opacity-0"
+        >
+          -1
+        </span>
+      </div>
     </div>
   );
 });

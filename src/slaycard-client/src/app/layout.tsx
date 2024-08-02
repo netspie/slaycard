@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair } from "next/font/google";
 import "./globals.css";
-import Image from "next/image";
 
 const inter = Playfair({ subsets: ["latin"] });
 
@@ -21,8 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={htmlClass}>
       <body className={bodyClass}>
-        <div className="fixed bg-repeat w-full h-full bg-[length:512px_512px]  bg-black">
-        </div>
+        <div className="fixed bg-repeat w-full h-full bg-[length:512px_512px]  bg-black"></div>
         {children}
       </body>
     </html>
