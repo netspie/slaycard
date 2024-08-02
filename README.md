@@ -20,6 +20,6 @@ https://slaycard.vercel.app/combats/xyz
 #### Video
 https://youtu.be/paYfT77L3YA
 
-*The card graphics are random, but serves as a general view*  
+*The card graphics are random, but serve as a general view*  
   
 ![img](https://github.com/netspie/slaycard-docs/blob/main/img/demo/demo-img.png))
