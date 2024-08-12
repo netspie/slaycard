@@ -1,7 +1,9 @@
 ﻿using Core.Domain;
-using Game.Battle.Domain.Events;
+using Slaycard.Combats.Domain;
+using Slaycard.Combats.Domain.Events;
 
-namespace Game.Battle.Domain;
+namespace Slaycard.Api.Features.Combats.Domain;
+
 public class Battle : Entity<BattleId>
 {
     public Player[] Players { get; private set; }

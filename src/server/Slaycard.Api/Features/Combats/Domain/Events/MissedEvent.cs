@@ -1,4 +1,6 @@
-﻿namespace Game.Battle.Domain.Events;
+﻿using Slaycard.Api.Features.Combats.Domain;
+
+namespace Slaycard.Combats.Domain.Events;
 
 public record MissedEvent(
     BattleId BattleId,

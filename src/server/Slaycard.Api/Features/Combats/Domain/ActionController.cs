@@ -1,6 +1,6 @@
 ﻿using Core.Collections;
 
-namespace Game.Battle.Domain;
+namespace Slaycard.Combats.Domain;
 public class ActionController<TId> : IActionController<TId>
     where TId : class
 {

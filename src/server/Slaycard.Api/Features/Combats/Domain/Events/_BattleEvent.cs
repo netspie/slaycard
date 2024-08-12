@@ -1,6 +1,7 @@
 ﻿using Core.Domain;
+using Slaycard.Api.Features.Combats.Domain;
 
-namespace Game.Battle.Domain.Events;
+namespace Slaycard.Combats.Domain.Events;
 
 public abstract record BattleEvent(
     BattleId BattleId,

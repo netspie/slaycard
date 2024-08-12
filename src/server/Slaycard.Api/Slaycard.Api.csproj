@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <Folder Include="Core\Collections\" />
-    <Folder Include="Features\" />
   </ItemGroup>
 
 </Project>

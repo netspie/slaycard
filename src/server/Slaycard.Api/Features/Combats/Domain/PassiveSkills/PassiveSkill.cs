@@ -1,3 +1,3 @@
-﻿namespace Game.Battle.Domain.PassiveSkills;
+﻿namespace Slaycard.Combats.Domain.PassiveSkills;
 
 public abstract record PassiveSkill();

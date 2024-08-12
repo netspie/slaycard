@@ -1,6 +1,6 @@
 ﻿using Core.Domain;
 
-namespace Game.Battle.Domain;
+namespace Slaycard.Combats.Domain;
 
 public class Player : IEntity<PlayerId>
 {

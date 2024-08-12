@@ -1,6 +1,6 @@
 ﻿using Core.Collections;
 
-namespace Game.Battle.Domain;
+namespace Slaycard.Combats.Domain;
 
 public static class CombatFormulas
 {

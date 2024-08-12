@@ -1,7 +1,8 @@
 ﻿using Core.Domain;
-using Game.Battle.Domain.Artifacts;
+using Slaycard.Api.Features.Combats.Domain;
+using Slaycard.Combats.Domain.Artifacts;
 
-namespace Game.Battle.Domain;
+namespace Slaycard.Combats.Domain;
 public abstract class Artifact : IEntity<ArtifactId>
 {
     public ArtifactId Id { get; init; }

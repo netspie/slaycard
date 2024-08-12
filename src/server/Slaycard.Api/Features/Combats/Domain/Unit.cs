@@ -1,8 +1,8 @@
 ﻿using Core.Collections;
 using Core.Domain;
-using Game.Battle.Domain.PassiveSkills;
+using Slaycard.Combats.Domain.PassiveSkills;
 
-namespace Game.Battle.Domain;
+namespace Slaycard.Combats.Domain;
 
 public class Unit : IEntity<UnitId>
 {
