@@ -1,0 +1,6 @@
+@Slaycard.Api_HostAddress = http://localhost:5053
+
+GET {{Slaycard.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

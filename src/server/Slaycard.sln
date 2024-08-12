@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slaycard.Battles", "Slaycard.Battles\Slaycard.Battles.csproj", "{B7B2D8C3-4DD4-44C3-9EBD-F981196009ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slaycard.Api", "Slaycard.Api\Slaycard.Api.csproj", "{2757A350-33EC-4800-8409-B1B47963C58E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B7B2D8C3-4DD4-44C3-9EBD-F981196009ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B7B2D8C3-4DD4-44C3-9EBD-F981196009ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B7B2D8C3-4DD4-44C3-9EBD-F981196009ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B7B2D8C3-4DD4-44C3-9EBD-F981196009ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2757A350-33EC-4800-8409-B1B47963C58E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2757A350-33EC-4800-8409-B1B47963C58E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2757A350-33EC-4800-8409-B1B47963C58E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2757A350-33EC-4800-8409-B1B47963C58E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
