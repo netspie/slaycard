@@ -1,6 +1,5 @@
 ﻿using Core.Domain;
-using Slaycard.Combats.Domain;
-using Slaycard.Combats.Domain.Events;
+using Slaycard.Api.Features.Combats.Domain.Events;
 
 namespace Slaycard.Api.Features.Combats.Domain;
 
@@ -107,4 +106,4 @@ public class Battle : Entity<BattleId>
     }
 }
 
-public record BattleId(string Value);
+public record BattleId(string Value) : EntityId(Value);

@@ -1,8 +1,8 @@
 ﻿using Core.Collections;
 using Core.Domain;
-using Slaycard.Combats.Domain.PassiveSkills;
+using Slaycard.Api.Features.Combats.Domain.PassiveSkills;
 
-namespace Slaycard.Combats.Domain;
+namespace Slaycard.Api.Features.Combats.Domain;
 
 public class Unit : IEntity<UnitId>
 {
@@ -74,7 +74,7 @@ public class Unit : IEntity<UnitId>
     }
 }
 
-public record UnitId(string Value);
+public record UnitId(string Value) : EntityId(Value);
 
 public static class UnitExtensions
 {

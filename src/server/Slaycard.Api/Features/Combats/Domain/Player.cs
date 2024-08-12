@@ -1,6 +1,6 @@
 ﻿using Core.Domain;
 
-namespace Slaycard.Combats.Domain;
+namespace Slaycard.Api.Features.Combats.Domain;
 
 public class Player : IEntity<PlayerId>
 {
@@ -39,7 +39,7 @@ public class Player : IEntity<PlayerId>
         Units.GetOfId(unitId);
 }
 
-public record PlayerId(string Value);
+public record PlayerId(string Value) : EntityId(Value);
 
 public static class PlayerExtensions
 {

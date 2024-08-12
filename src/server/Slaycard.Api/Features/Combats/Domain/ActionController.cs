@@ -1,6 +1,7 @@
 ﻿using Core.Collections;
 
-namespace Slaycard.Combats.Domain;
+namespace Slaycard.Api.Features.Combats.Domain;
+
 public class ActionController<TId> : IActionController<TId>
     where TId : class
 {
@@ -77,7 +78,7 @@ public class ActionController<TId> : IActionController<TId>
         ActionInfo = new()
         {
             Actions = ActionInfo.Actions.Append(
-                    new(name, IsUserAction: false, DoneBefore: false, Array.Empty<TId>(), repeat)).ToArray(),
+                new ActionData<TId>(name, IsUserAction: false, DoneBefore: false, Array.Empty<TId>(), repeat)).ToArray(),
         };
 
         return this.Success();

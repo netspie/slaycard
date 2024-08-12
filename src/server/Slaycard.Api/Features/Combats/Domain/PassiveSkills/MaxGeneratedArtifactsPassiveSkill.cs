@@ -1,4 +1,4 @@
-﻿namespace Slaycard.Combats.Domain.PassiveSkills;
+﻿namespace Slaycard.Api.Features.Combats.Domain.PassiveSkills;
 
 /// <summary>
 /// Maximum generated artifacts passive skill

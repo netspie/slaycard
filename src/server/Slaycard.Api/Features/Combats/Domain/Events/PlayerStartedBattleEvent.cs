@@ -1,6 +1,6 @@
 ﻿using Slaycard.Api.Features.Combats.Domain;
 
-namespace Slaycard.Combats.Domain.Events;
+namespace Slaycard.Api.Features.Combats.Domain.Events;
 
 public record PlayerStartedBattleEvent(
     BattleId BattleId,

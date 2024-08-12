@@ -1,4 +1,4 @@
-﻿namespace Slaycard.Combats.Domain;
+﻿namespace Slaycard.Api.Features.Combats.Domain;
 
 public static class UnitOrderCalculator
 {
