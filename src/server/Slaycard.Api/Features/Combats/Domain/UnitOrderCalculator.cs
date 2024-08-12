@@ -37,8 +37,9 @@ public static class UnitOrderCalculator
         for (int i = 0; i < sum; i++)
             order[i] = -1;
 
-        var speedsSorted = speeds.Select((s, i) => new Pair(s, i)).ToList();
-        speedsSorted.Sort(new Comparer());
+        var speedsSorted = speeds
+            .Select((s, i) => (v: s, i))
+            .OrderByDescending(d => d.v).ToArray();
 
         // Spread indexes evenly by its occurence value
         // Units/indexes with the same speed value should be in ascending order (by input array index) - although eventually will be randomized
@@ -74,16 +75,7 @@ public static class UnitOrderCalculator
 
         return order;
     }
-
-    public record Pair(int v, int i);
-    public class Comparer : IComparer<Pair>
-    {
-        int IComparer<Pair>.Compare(Pair? x, Pair? y) =>
-            x is not null && y is not null ? 
-                y.v - x.v :
-                -1;
-    }
-
+    
     private static int GCD(params int[] v) =>
         v.Aggregate((x, y) => GCDx(x, y));
 
