@@ -2,6 +2,6 @@
 
 public interface IBattleRepository
 {
-    Task Add(Battle battle);
+    Task<bool> Add(Battle battle);
     Task<Battle> Get(BattleId id);
 }

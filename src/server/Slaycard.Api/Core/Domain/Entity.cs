@@ -40,7 +40,7 @@ public interface IEntity<TId>
 
 public static class EntityExtensions
 {
-    public static TEntity GetOfId<TEntity, TId>(this IEnumerable<TEntity> source, TId id)
+    public static TEntity? GetOfId<TEntity, TId>(this IEnumerable<TEntity> source, TId id)
         where TEntity : IEntity<TId>
         where TId : class =>
         source.FirstOrDefault(x => x.Id == id) ?? default;
@@ -58,4 +58,6 @@ public interface IDomainEvent
 public abstract record EntityId(string Value)
 {
     public static implicit operator string(EntityId id) => id.Value;
+
+    public static string NewGuid => Guid.NewGuid().ToString();
 }

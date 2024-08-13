@@ -6,7 +6,12 @@ public class Player : IEntity<PlayerId>
 {
     public PlayerId Id { get; init; }
 
-    public Unit[] Units { get; private set; }
+    public Unit[] Units { get; private set; } = [];
+
+    public Player(PlayerId id)
+    {
+        Id = id;
+    }
 
     public void ApplyArtifact(
         Player originPlayer,

@@ -1,18 +1,24 @@
-﻿using Slaycard.Api.Features.Combats.Domain;
+﻿using Core.Domain;
+using Slaycard.Api.Features.Combats.Domain;
 
 namespace Slaycard.Api.Features.Combats.UseCases;
 
 public static class StartRandomBotBattleRoute
 {
     public static void InitStartRandomBotBattleRoute(this IEndpointRouteBuilder app) => app.MapPost(
-        pattern: "/battles/startPvERandom",
-        (HttpContext context) =>
+        pattern: "/battles/startRandomPvE",
+        (HttpContext context,
+        StartRandomBotBattleApiCommand command,
+        IBattleRepository respository) =>
         {
-
+            var handler = new StartRandomBotBattleCommandHandler(respository);
+            return handler.Handle(
+                new StartRandomBotBattleCommand(command.PlayerId));
         });
 }
 
-public record StartRandomBotBattleApiCommand();
+public record StartRandomBotBattleApiCommand(
+    string PlayerId);
 
 public record StartRandomBotBattleCommand(
     string PlayerId);
@@ -22,12 +28,12 @@ public record StartRandomBotBattleCommandHandler(
 {
     public async Task Handle(StartRandomBotBattleCommand command)
     {
-        //var battle = new Battle(
-        //null,)
-
         var battle = new Battle(
-            new BattleId(""),
-            Enumerable.Empty<Player>());
+            new BattleId("xyz"),
+            [
+                new Player(new PlayerId(command.PlayerId)),
+                new Player(new PlayerId("bot")),
+            ]);
         
         await Repository.Add(battle);
     }

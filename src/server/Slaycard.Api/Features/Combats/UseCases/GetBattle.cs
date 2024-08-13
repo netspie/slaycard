@@ -6,16 +6,16 @@ namespace Slaycard.Api.Features.Combats.UseCases;
 
 public static class GetBattleRoute
 {
-    public static void InitStartRandomBotBattleRoute(this IEndpointRouteBuilder app) => app.MapPost(
-        pattern: "/battles/{battleId}", 
-        handler: (
-            HttpContext context,
-            GetBattleApiQuery query,
+    public static void InitGetBattleRoute(this IEndpointRouteBuilder app) => app.MapGet(
+        pattern: "/battles/{battleId}",
+        handler: 
+            (HttpContext context,
+            [AsParameters] GetBattleApiQuery query,
             IBattleRepository respository) =>
-
-            new GetBattleQueryHandler(respository)
-                .Handle(new GetBattleQuery(query.BattleId))
-    );
+            {
+                var handler = new GetBattleQueryHandler(respository);
+                return handler.Handle(new GetBattleQuery(query.BattleId));
+            });
 }
 
 public record GetBattleQueryHandler(

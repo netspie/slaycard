@@ -5,6 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCombatsModule();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -15,6 +17,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.InitCombatsModule();
+app.UseCombatsModule();
 
 app.Run();
