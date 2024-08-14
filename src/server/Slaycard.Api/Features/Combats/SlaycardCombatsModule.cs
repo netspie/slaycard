@@ -17,6 +17,7 @@ public static class SlaycardCombatsModule
     {
         app.InitStartRandomBotBattleRoute();
         app.InitGetBattleRoute();
+        app.InitGetBattlesRoute();
 
         return app;
     }

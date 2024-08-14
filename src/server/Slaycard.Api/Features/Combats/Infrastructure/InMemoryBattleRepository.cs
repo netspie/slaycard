@@ -20,4 +20,13 @@ public class InMemoryBattleRepository : IBattleRepository
 
         return Task.FromResult(battle);
     }
+
+    public Task<Battle[]> GetMany(int Offset, int Limit)
+    {
+        return Task.FromResult(
+            _battles.Values
+                .Skip(Offset)
+                .Take(Limit)
+                .ToArray());
+    }
 }

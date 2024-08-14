@@ -5,6 +5,8 @@ namespace Slaycard.Api.Features.Combats.Domain;
 
 public class Battle : Entity<BattleId>
 {
+    public DateTime TimeCreated { get; } = DateTime.UtcNow;
+
     public Player[] Players { get; private set; }
     public ActionController<PlayerId> PlayerActionController { get; private set; } = new();
     public ActionController<UnitId> UnitActionController { get; private set; } = new();

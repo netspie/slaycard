@@ -1,5 +1,4 @@
-﻿using Core.Domain;
-using Slaycard.Api.Features.Combats.Domain;
+﻿using Slaycard.Api.Features.Combats.Domain;
 
 namespace Slaycard.Api.Features.Combats.UseCases;
 
