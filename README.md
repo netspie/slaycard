@@ -8,6 +8,8 @@ Detailed technical documentation with development progress description can be fo
 
 Slaycard is turn-based combat game where you can manage your team of characters and battle against others. Each character can be developed in a unique way, which can influence the style of gameplay. You can choose from multiple opponents, gather experience from the concluded battles and improve your characters statistics and skills.
 
+Thought process behind the development process available [here](https://medium.com/@netspie/building-a-highly-scalable-turn-based-combat-game-bd8117236364 ).
+
 ### Technologies
 Next.js 14, Asp.Net Core 8
 
