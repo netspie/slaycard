@@ -5,6 +5,7 @@ namespace Slaycard.Api.Features.Combats.Domain;
 public static class CombatFormulas
 {
     #region Hit Chance
+
     public static bool CalculateIfHit(Stat attackerAccuracy, Stat defenderDodge, Random? random) =>
         CalculateIfHit(attackerAccuracy.CalculatedValue, defenderDodge.CalculatedValue, random);
 

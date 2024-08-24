@@ -1,8 +1,9 @@
 ﻿using Core.Collections;
-using Slaycard.Api.Features.Combats.Domain;
 
 namespace Core.Domain;
+
 public class Entity<TId> : IEntity<TId>
+    where TId : class
 {
     public TId Id { get; }
     public Entity(TId id) => Id = id;
@@ -31,6 +32,13 @@ public class Entity<TId> : IEntity<TId>
     }
 
     public static implicit operator bool(Entity<TId> v) => v is not null;
+
+    public override bool Equals(object? obj) =>
+        obj is Entity<TId> entity ?
+            entity.Id == Id :
+            false;
+
+    public override int GetHashCode() => Id.GetHashCode();
 }
 
 public interface IEntity<TId>

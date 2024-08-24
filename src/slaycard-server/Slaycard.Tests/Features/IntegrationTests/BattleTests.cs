@@ -4,12 +4,13 @@ namespace Slaycard.Features.Combats.IntegrationTests;
 
 public class BattleTests
 {
-    //[Test]
-    //public void PerformBasicBattle()
-    //{
-    //    //var players = new Player[0];
-    //    //var battleId = new BattleId("asd");
+    [Test]
+    public void PerformBasicBattle()
+    {
+        var player1 = new Player(new PlayerId("player-1"), []);
+        var player2 = new Player(new PlayerId("player-2"), []);
 
-    //    //var battle = new Battle(battleId, players);
-    //}
+        var players = new[] { player1, player2 };
+        var battle = new Battle(new BattleId("asd"), players);
+    }
 }

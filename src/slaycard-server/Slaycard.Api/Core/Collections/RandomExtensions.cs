@@ -1,8 +1,4 @@
-﻿
-
-using System;
-
-namespace Core.Collections
+﻿namespace Core.Collections
 {
     public static class RandomExtensions
     {

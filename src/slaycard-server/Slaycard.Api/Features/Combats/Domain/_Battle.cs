@@ -24,7 +24,6 @@ public class Battle : Entity<BattleId>
         var unitsIdsByOrder = unitsOrder.Select(i => units[i].Id).ToArray();
 
         UnitActionController
-            .SetActionExpectedNext(nameof(AssembleArtifacts), ActionRepeat.Multiple)
             .SetActionExpectedNext(nameof(ApplyArtifact), ActionRepeat.Multiple)
             .SetActionExpectedNext(nameof(Pass))
             .By(unitsIdsByOrder, mustObeyOrder: true);
@@ -40,46 +39,22 @@ public class Battle : Entity<BattleId>
 
         PlayerActionController
             .SetActionDone(nameof(Start), playerId)
-            .SetActionExpectedNext(nameof(AssembleArtifacts), ActionRepeat.Multiple)
             .SetActionExpectedNext(nameof(ApplyArtifact), ActionRepeat.Multiple)
             .SetActionExpectedNext(nameof(Pass), ActionRepeat.Single);
     }
 
-    public void AssembleArtifacts(
-        PlayerId playerId,
-        UnitId unitId,
-        ArtifactId originArtifactId,
-        ArtifactId? targetArtifactId = null)
-    {
-        if (!PlayerActionController.CanMakeAction(nameof(AssembleArtifacts), playerId))
-            throw new Exception("cant_perform_this_operation");
-
-        if (!UnitActionController.CanMakeAction(nameof(AssembleArtifacts), unitId))
-            throw new Exception("cant_perform_this_operation");
-
-        var events = Players.AssembleArtifacts(
-            playerId,
-            unitId,
-            originArtifactId,
-            targetArtifactId);
-
-        AddEvents(events);
-
-        UnitActionController.SetActionDone(nameof(AssembleArtifacts), unitId);
-    }
-
-    // Change so it supports area/group applies
     public void ApplyArtifact(
         PlayerId originPlayerId,
         UnitId originUnitId,
         ArtifactId artifactId,
         PlayerId targetPlayerId,
-        UnitId targetUnitId)
+        UnitId targetUnitId,
+        Random? random = null)
     {
-        if (!PlayerActionController.CanMakeAction(nameof(AssembleArtifacts), originPlayerId))
+        if (!PlayerActionController.CanMakeAction(nameof(ApplyArtifact), originPlayerId))
             throw new Exception("cant_perform_this_operation");
 
-        if (!UnitActionController.CanMakeAction(nameof(AssembleArtifacts), originUnitId))
+        if (!UnitActionController.CanMakeAction(nameof(ApplyArtifact), originUnitId))
             throw new Exception("cant_perform_this_operation");
 
         Players.ApplyArtifact(
@@ -87,7 +62,8 @@ public class Battle : Entity<BattleId>
             originUnitId,
             targetPlayerId,
             artifactId,
-            targetUnitId);
+            targetUnitId,
+            random);
 
         // if can't do anymore, then automatically pass
         // Pass(originPlayerId, originUnitId);
@@ -110,9 +86,16 @@ public class Battle : Entity<BattleId>
 
         //Players.GenerateActionCards();
     }
+
+    public override bool Equals(object? obj) =>
+        obj is Battle battle?
+            battle.Id == Id :
+            false;
+
+    public override int GetHashCode() => Id.GetHashCode();
 }
 
 public record BattleId(string Value) : EntityId(Value)
 {
-    public BattleId() : this(NewGuid) { }
+    public BattleId() : this(NewGuid) {}
 }

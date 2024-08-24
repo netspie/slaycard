@@ -1,10 +1,4 @@
-﻿
-
-using System.Collections.Generic;
-using System;
-using System.Linq;
-
-namespace Core.Collections
+﻿namespace Core.Collections
 {
     public static class EnumerableExtensions
     {

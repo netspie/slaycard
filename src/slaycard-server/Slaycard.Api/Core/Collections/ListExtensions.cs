@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Core.Collections
+﻿namespace Core.Collections
 {
     public static class ListExtensions
     {
