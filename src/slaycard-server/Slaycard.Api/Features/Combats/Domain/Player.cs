@@ -8,9 +8,13 @@ public class Player : IEntity<PlayerId>
 
     public Unit[] Units { get; private set; } = [];
 
-    public Player(PlayerId id)
+    public Player(PlayerId id, IEnumerable<Unit> units)
     {
         Id = id;
+        Units = units.ToArray();
+
+        if (Units.Length == 0)
+            throw new Exception("cant_have_zero_units");
     }
 
     public void ApplyArtifact(

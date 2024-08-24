@@ -30,8 +30,8 @@ public record StartRandomBotBattleCommandHandler(
         var battle = new Battle(
             new BattleId("xyz"),
             [
-                new Player(new PlayerId(command.PlayerId)),
-                new Player(new PlayerId("bot")),
+                new Player(new PlayerId(command.PlayerId), []),
+                new Player(new PlayerId("bot"), []),
             ]);
         
         await Repository.Add(battle);

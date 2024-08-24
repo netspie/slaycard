@@ -14,6 +14,9 @@ public class Battle : Entity<BattleId>
     public Battle(BattleId id, IEnumerable<Player> players) : base(id)
     {
         Players = players.ToArray();
+        if (Players.Length < 2)
+            throw new Exception("cant_have_less_than_two_players");
+
         PlayerActionController.SetActionExpectedNext(nameof(Start)).By(Players.GetIds());
 
         var units = Players.GetUnits();

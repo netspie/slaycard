@@ -1,7 +1,7 @@
 
 using Slaycard.Api.Features.Combats.Domain;
 
-namespace Trinica.Entities.Tests;
+namespace Slaycard.Features.Combats.UnitTests;
 
 public class ActionControllerTests
 {
