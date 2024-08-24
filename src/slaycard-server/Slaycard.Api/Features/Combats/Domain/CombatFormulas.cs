@@ -51,7 +51,7 @@ public static class CombatFormulas
         out (double low, double high) damageRange,
         Random? random = null)
     {
-        var midDamage = ((attackerAttack + defenderDefense) / (double) (defenderDefense) * DefenceFactor);
+        var midDamage = ((attackerAttack + defenderDefense) / ((double) (defenderDefense) * DefenceFactor));
         var diffDamage = midDamage * 0.1;
         var lowestDamage = midDamage - diffDamage;
         var higherDamage = midDamage + diffDamage;

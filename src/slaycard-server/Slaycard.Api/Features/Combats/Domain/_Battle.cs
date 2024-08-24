@@ -15,7 +15,7 @@ public class Battle : Entity<BattleId>
     {
         Players = players.ToArray();
         if (Players.Length < 2)
-            throw new Exception("cant_have_less_than_two_players");
+            throw new Exception("cant_have_less_than_two_players_err");
 
         PlayerActionController.SetActionExpectedNext(nameof(Start)).By(Players.GetIds());
 
@@ -24,15 +24,14 @@ public class Battle : Entity<BattleId>
         var unitsIdsByOrder = unitsOrder.Select(i => units[i].Id).ToArray();
 
         UnitActionController
-            .SetActionExpectedNext(nameof(ApplyArtifact), ActionRepeat.Multiple)
-            .SetActionExpectedNext(nameof(Pass))
+            .SetActionExpectedNext(nameof(ApplyArtifact))
             .By(unitsIdsByOrder, mustObeyOrder: true);
     }
 
     public void Start(PlayerId playerId)
     {
         if (!PlayerActionController.CanMakeAction(nameof(Start), playerId))
-            throw new Exception("cant_start_the_battle_again");
+            throw new Exception("cant_start_the_battle_again_err");
 
         AddEvent(new PlayerStartedBattleEvent(
             Id, playerId));
@@ -40,7 +39,6 @@ public class Battle : Entity<BattleId>
         PlayerActionController
             .SetActionDone(nameof(Start), playerId)
             .SetActionExpectedNext(nameof(ApplyArtifact), ActionRepeat.Multiple)
-            .SetActionExpectedNext(nameof(Pass), ActionRepeat.Single)
             .By(Players.GetIds(), mustObeyOrder: true);
     }
 
@@ -52,41 +50,30 @@ public class Battle : Entity<BattleId>
         UnitId targetUnitId,
         Random? random = null)
     {
-        if (!PlayerActionController.CanMakeAction(nameof(ApplyArtifact), originPlayerId))
-            throw new Exception("cant_perform_this_operation");
+        if (IsGameOver)
+            throw new Exception("cant_continue_if_game_over_err");
 
         if (!UnitActionController.CanMakeAction(nameof(ApplyArtifact), originUnitId))
-            throw new Exception("cant_perform_this_operation");
+            throw new Exception("cant_perform_this_operation_err");
 
-        Players.ApplyArtifact(
-            originPlayerId,
-            originUnitId,
-            targetPlayerId,
-            artifactId,
-            targetUnitId,
-            random);
+        AddEvents(
+            Players.ApplyArtifact(
+                battleId: Id,
+                originPlayerId,
+                originUnitId,
+                targetPlayerId,
+                artifactId,
+                targetUnitId,
+                random));
 
-        // if can't do anymore, then automatically pass
-        // Pass(originPlayerId, originUnitId);
+        if (!Players.IsUnitAlive(targetPlayerId, targetUnitId))
+            AddEvent(new GameOverEvent(BattleId: Id, WinnerId: originPlayerId));
 
         UnitActionController.SetActionDone(nameof(ApplyArtifact), originUnitId);
-        //UnitActionController.ActionInfo.GetAction().
     }
 
-    public void Pass(
-        PlayerId originPlayerId,
-        UnitId originUnitId)
-    {
-        if (!PlayerActionController.CanMakeAction(nameof(Pass), originPlayerId))
-            throw new Exception("cant_perform_this_operation");
-
-        if (!UnitActionController.CanMakeAction(nameof(Pass), originUnitId))
-            throw new Exception("cant_perform_this_operation");
-
-        UnitActionController.SetActionDone(nameof(Pass), originUnitId);
-
-        //Players.GenerateActionCards();
-    }
+    public bool IsGameOver =>
+        Players.IsAnyPlayerOutOfUnitsAlive();
 
     public override bool Equals(object? obj) =>
         obj is Battle battle?

@@ -22,7 +22,7 @@ public class Stat
             Modifiers.ForEach(m =>
                 value = m.IsFactor ? value = (int)(value * m.Value) : (int)(value + m.Value));
 
-            return value;
+            return Math.Max(value, 0);
         }
     }
 }

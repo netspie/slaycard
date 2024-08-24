@@ -8,11 +8,23 @@ public class Unit : IEntity<UnitId>
 
     public CombatStatGroup CombatStats { get; private set; }
 
-    public Unit(UnitId id, CombatStatGroup combatStats)
+    public Artifact[] Artifacts { get; private set; }
+
+    public Unit(
+        UnitId id, 
+        CombatStatGroup combatStats, 
+        IEnumerable<Artifact> artifacts)
     {
         Id = id;
         CombatStats = combatStats;
+        Artifacts = artifacts.ToArray();
     }
+
+    public Artifact? GetArtifact(ArtifactId id) =>
+        Artifacts.GetOfId(id);
+
+    public bool IsAlive() =>
+        CombatStats.HP.CalculatedValue > 0;
 
     public override bool Equals(object? obj) =>
         obj is Unit unit ?
