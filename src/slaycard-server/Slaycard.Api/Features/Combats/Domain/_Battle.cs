@@ -17,14 +17,14 @@ public class Battle : Entity<BattleId>
         PlayerActionController.SetActionExpectedNext(nameof(Start)).By(Players.GetIds());
 
         var units = Players.GetUnits();
-        //var unitsOrder = UnitOrderCalculator.CalculateActionOrder(units);
-        //var unitsIdsByOrder = unitsOrder.Select(i => units[i].Id).ToArray();
+        var unitsOrder = UnitOrderCalculator.CalculateActionOrder(units);
+        var unitsIdsByOrder = unitsOrder.Select(i => units[i].Id).ToArray();
 
-        //UnitActionController
-        //    .SetActionExpectedNext(nameof(AssembleArtifacts), ActionRepeat.Multiple)
-        //    .SetActionExpectedNext(nameof(ApplyArtifact), ActionRepeat.Multiple)
-        //    .SetActionExpectedNext(nameof(Pass))
-        //    .By(unitsIdsByOrder, mustObeyOrder: true);
+        UnitActionController
+            .SetActionExpectedNext(nameof(AssembleArtifacts), ActionRepeat.Multiple)
+            .SetActionExpectedNext(nameof(ApplyArtifact), ActionRepeat.Multiple)
+            .SetActionExpectedNext(nameof(Pass))
+            .By(unitsIdsByOrder, mustObeyOrder: true);
     }
 
     public void Start(PlayerId playerId)

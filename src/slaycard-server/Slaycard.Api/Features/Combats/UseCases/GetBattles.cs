@@ -7,8 +7,8 @@ public static class GetBattlesRoute
 {
     public static void InitGetBattlesRoute(this IEndpointRouteBuilder app) => app.MapGet(
         pattern: "/battles",
-        handler: 
-            (HttpContext context,
+        handler: (
+            HttpContext context,
             [AsParameters] GetBattlesApiQuery query,
             IBattleRepository repository) =>
             {

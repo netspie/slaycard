@@ -6,6 +6,7 @@ namespace Slaycard.Api.Features.Combats.Infrastructure;
 public class InMemoryBattleRepository : IBattleRepository
 {
     private readonly ConcurrentDictionary<BattleId, Battle> _battles = new();
+    private readonly HashSet<PlayerId> _players = new();
 
     public Task<bool> Add(Battle battle)
     {

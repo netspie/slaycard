@@ -45,13 +45,13 @@ public class Unit : IEntity<UnitId>
         else
         if (targetArtifact is not null)
         {
-            var result = targetArtifact.Assemble(originArtifact);
-            if (result.Artifact is null)
+            //var result = targetArtifact.Assemble(originArtifact);
+            //if (result.Artifact is null)
                 throw new Exception("cant_assemble_with_this_art");
 
-            AssembledArtifacts.Replace(targetArtifact, result.Artifact);
+            //AssembledArtifacts.Replace(targetArtifact, result.Artifact);
 
-            return result.Events;
+            //return result.Events;
         }
 
         throw new Exception("error_occured");
