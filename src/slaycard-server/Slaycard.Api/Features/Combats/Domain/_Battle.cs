@@ -40,7 +40,8 @@ public class Battle : Entity<BattleId>
         PlayerActionController
             .SetActionDone(nameof(Start), playerId)
             .SetActionExpectedNext(nameof(ApplyArtifact), ActionRepeat.Multiple)
-            .SetActionExpectedNext(nameof(Pass), ActionRepeat.Single);
+            .SetActionExpectedNext(nameof(Pass), ActionRepeat.Single)
+            .By(Players.GetIds(), mustObeyOrder: true);
     }
 
     public void ApplyArtifact(

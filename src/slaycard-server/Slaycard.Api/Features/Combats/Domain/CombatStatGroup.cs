@@ -2,7 +2,6 @@
 
 public record CombatStatGroup(
     Stat HP,
-    Stat Energy,
     Stat Damage,
     Stat Defence,
     Stat Accuracy,

@@ -25,17 +25,17 @@ public class Player : IEntity<PlayerId>
         UnitId targetUnitId,
         Random? random)
     {
-        var artifact = originPlayer.GetArtifact(originUnitId, artifactId);
-        if (artifact is null)
-            throw new Exception("artifact_does_not_exist");
+        var artifact = originPlayer
+            .GetArtifact(originUnitId, artifactId)
+            .ThrowIfNull("artifact_does_not_exist");
 
-        var originUnit = originPlayer.GetUnit(originUnitId);
-        if (originUnit is null)
-            throw new Exception("origin_unit_does_not_exist");
+        var originUnit = originPlayer
+            .GetUnit(originUnitId)
+            .ThrowIfNull("origin_unit_does_not_exist");
 
-        var targetUnit = Units.GetOfId(targetUnitId);
-        if (targetUnit is null)
-            throw new Exception("target_unit_does_not_exist");
+        var targetUnit = Units
+            .GetOfId(targetUnitId)
+            .ThrowIfNull("target_unit_does_not_exist");
 
         var args = new ApplyArtifactArgs(
             originPlayer, 
