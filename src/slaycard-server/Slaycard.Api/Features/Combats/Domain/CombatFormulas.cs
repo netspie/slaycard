@@ -51,7 +51,7 @@ public static class CombatFormulas
         out (double low, double high) damageRange,
         Random? random = null)
     {
-        var midDamage = ((attackerAttack + defenderDefense) / ((double) (defenderDefense) * DefenceFactor));
+        var midDamage = (attackerAttack / (double) 5) * ((attackerAttack / defenderDefense) * DefenceFactor);
         var diffDamage = midDamage * 0.1;
         var lowestDamage = midDamage - diffDamage;
         var higherDamage = midDamage + diffDamage;
@@ -61,7 +61,7 @@ public static class CombatFormulas
         var l = (int) lowestDamage * DamageCalculationFactor;
         var h = (int) (higherDamage * DamageCalculationFactor) + 1;
 
-        return (random ?? new()).Next(l, h) / DamageCalculationFactor;
+        return Math.Max(1, (random ?? new()).Next(l, h) / DamageCalculationFactor);
     }
 
     #endregion

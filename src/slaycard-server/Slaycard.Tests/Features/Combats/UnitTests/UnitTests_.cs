@@ -3,7 +3,7 @@ using Slaycard.Api.Features.Combats.Domain;
 
 namespace Slaycard.Features.Combats.UnitTests;
 
-public class UnitTests
+public class UnitTests_
 {
     public static Unit CreateUnit(string unitId, int statValues = 1) => new Unit(
         new UnitId(unitId),
