@@ -1,6 +1,6 @@
 ﻿using Slaycard.Api.Features.Combats.Domain;
 
-namespace Slaycard.Features.Combats.UnitTests;
+namespace Slaycard.Tests.Features.Combats.UnitTests;
 
 public class UnitOrderCalculatorTests
 {
@@ -15,6 +15,6 @@ public class UnitOrderCalculatorTests
         var order = UnitOrderCalculator.CalculateActionOrder(speeds);
         var orderStr = order.Select(i => i.ToString()).Aggregate((x, y) => $"{x}, {y}");
 
-        Assert.IsTrue(Enumerable.SequenceEqual(order, expected));
+        Assert.IsTrue(order.SequenceEqual(expected));
     }
 }

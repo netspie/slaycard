@@ -1,8 +1,7 @@
 ﻿using Slaycard.Api.Features.Combats.Domain;
-using Slaycard.Api.Features.Combats.Domain.Artifacts;
-using Slaycard.Features.Combats.UnitTests;
+using Slaycard.Tests.Features.Combats.UnitTests;
 
-namespace Slaycard.Features.Combats.IntegrationTests;
+namespace Slaycard.Tests.Features.Combats.IntegrationTests;
 
 public class BattleTests
 {

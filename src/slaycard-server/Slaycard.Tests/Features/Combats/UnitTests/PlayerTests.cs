@@ -1,6 +1,6 @@
 ﻿using Slaycard.Api.Features.Combats.Domain;
 
-namespace Slaycard.Features.Combats.UnitTests;
+namespace Slaycard.Tests.Features.Combats.UnitTests;
 
 public class PlayerTests
 {

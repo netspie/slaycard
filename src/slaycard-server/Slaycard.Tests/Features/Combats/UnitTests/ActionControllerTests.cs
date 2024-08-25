@@ -1,12 +1,11 @@
-
 using Slaycard.Api.Features.Combats.Domain;
 
-namespace Slaycard.Features.Combats.UnitTests;
+namespace Slaycard.Tests.Features.Combats.UnitTests;
 
 public class ActionControllerTests
 {
-    private void DoSomething() {}
-    private void DoSomethingElse() {}
+    private void DoSomething() { }
+    private void DoSomethingElse() { }
     private void DoSomethingElseElse() { }
 
     [Test]
