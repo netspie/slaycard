@@ -9,6 +9,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddCombatsModule();
+builder.Services.AddMediator(opts => opts.ServiceLifetime = ServiceLifetime.Scoped);
 
 var app = builder.Build();
 

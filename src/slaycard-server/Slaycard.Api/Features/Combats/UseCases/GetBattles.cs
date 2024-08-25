@@ -1,4 +1,5 @@
-﻿using Slaycard.Api.Features.Combats.Domain;
+﻿using Mediator;
+using Slaycard.Api.Features.Combats.Domain;
 using static Slaycard.Api.Features.Combats.UseCases.GetBattlesQueryResponse;
 
 namespace Slaycard.Api.Features.Combats.UseCases;
@@ -7,21 +8,19 @@ public static class GetBattlesRoute
 {
     public static void InitGetBattlesRoute(this IEndpointRouteBuilder app) => app.MapGet(
         pattern: "/battles",
-        handler: (
-            HttpContext context,
-            [AsParameters] GetBattlesApiQuery query,
-            IBattleRepository repository) =>
+        handler: 
+            (IMediator mediator,
+            [AsParameters] GetBattlesApiQuery query) =>
             {
-                var handler = new GetBattlesQueryHandler(repository);
-                return handler.Handle(new GetBattlesQuery(query.Offset, query.Limit));
+                mediator.Send(new GetBattlesQuery(query.Offset, query.Limit));
             });
 }
 
 public record GetBattlesQueryHandler(
-    IBattleRepository Repository)
+    IBattleRepository Repository) : IQueryHandler<GetBattlesQuery, GetBattlesQueryResponse>
 {
-    public async Task<GetBattlesQueryResponse> Handle(
-        GetBattlesQuery query)
+    public async ValueTask<GetBattlesQueryResponse> Handle(
+        GetBattlesQuery query, CancellationToken ct)
     {
         var battles = await Repository.GetMany(
             query.Offset, 
@@ -41,7 +40,7 @@ public record GetBattlesApiQuery(
 
 public record GetBattlesQuery(
     int Offset = 0,
-    int Limit = 25);
+    int Limit = 25) : IQuery<GetBattlesQueryResponse>;
 
 public record GetBattlesQueryResponse(
     BattleDTO[] Battles)

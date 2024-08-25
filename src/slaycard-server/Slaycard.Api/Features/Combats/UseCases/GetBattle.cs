@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Mediator;
+using Microsoft.AspNetCore.Mvc;
 using Slaycard.Api.Features.Combats.Domain;
 using static Slaycard.Api.Features.Combats.UseCases.GetBattleQueryResponse;
 
@@ -9,20 +10,18 @@ public static class GetBattleRoute
     public static void InitGetBattleRoute(this IEndpointRouteBuilder app) => app.MapGet(
         pattern: "/battles/{battleId}",
         handler: 
-            (HttpContext context,
-            [AsParameters] GetBattleApiQuery query,
-            IBattleRepository respository) =>
+            (IMediator mediator,
+            [AsParameters] GetBattleApiQuery query) =>
             {
-                var handler = new GetBattleQueryHandler(respository);
-                return handler.Handle(new GetBattleQuery(query.BattleId));
+                mediator.Send(new GetBattleQuery(query.BattleId));
             });
 }
 
 public record GetBattleQueryHandler(
-    IBattleRepository Repository)
+    IBattleRepository Repository) : IQueryHandler<GetBattleQuery, GetBattleQueryResponse>
 {
-    public async Task<GetBattleQueryResponse> Handle(
-        GetBattleQuery query)
+    public async ValueTask<GetBattleQueryResponse> Handle(
+        GetBattleQuery query, CancellationToken ct)
     {
         var battle = await Repository.Get(
             new BattleId(query.BattleId));
@@ -40,7 +39,7 @@ public record GetBattleQueryHandler(
 public record GetBattleApiQuery(
     [FromRoute] string BattleId);
 
-public record GetBattleQuery(string BattleId);
+public record GetBattleQuery(string BattleId) : IQuery<GetBattleQueryResponse>;
 
 public record GetBattleQueryResponse(
     BattleDTO DTO)
