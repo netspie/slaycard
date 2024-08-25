@@ -1,9 +1,13 @@
-﻿using Mediator;
+﻿using FluentValidation;
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using Slaycard.Api.Features.Combats.Domain;
 using static Slaycard.Api.Features.Combats.UseCases.GetBattleQueryResponse;
 
 namespace Slaycard.Api.Features.Combats.UseCases;
+
+public record GetBattleApiQuery(
+    [FromRoute] string BattleId);
 
 public static class GetBattleRoute
 {
@@ -36,8 +40,13 @@ public record GetBattleQueryHandler(
     }
 }
 
-public record GetBattleApiQuery(
-    [FromRoute] string BattleId);
+public class GetBattleQueryHandlerValidator : AbstractValidator<GetBattleQuery>
+{
+    public GetBattleQueryHandlerValidator()
+    {
+        RuleFor(q => q.BattleId).NotEmpty();
+    }
+}
 
 public record GetBattleQuery(string BattleId) : IQuery<GetBattleQueryResponse>;
 

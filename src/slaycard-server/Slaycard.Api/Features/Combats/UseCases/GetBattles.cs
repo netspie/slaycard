@@ -1,8 +1,13 @@
-﻿using Mediator;
+﻿using FluentValidation;
+using Mediator;
 using Slaycard.Api.Features.Combats.Domain;
 using static Slaycard.Api.Features.Combats.UseCases.GetBattlesQueryResponse;
 
 namespace Slaycard.Api.Features.Combats.UseCases;
+
+public record GetBattlesApiQuery(
+    int Offset = 0,
+    int Limit = 25);
 
 public static class GetBattlesRoute
 {
@@ -34,9 +39,18 @@ public record GetBattlesQueryHandler(
     }
 }
 
-public record GetBattlesApiQuery(
-    int Offset = 0,
-    int Limit = 25);
+public class GetBattlesQueryHandlerValidator : AbstractValidator<GetBattlesQuery>
+{
+    public GetBattlesQueryHandlerValidator() 
+    {
+        RuleFor(q => q.Offset)
+            .GreaterThanOrEqualTo(0);
+
+        RuleFor(q => q.Limit)
+            .GreaterThanOrEqualTo(1)
+            .LessThanOrEqualTo(25);
+    }
+}
 
 public record GetBattlesQuery(
     int Offset = 0,

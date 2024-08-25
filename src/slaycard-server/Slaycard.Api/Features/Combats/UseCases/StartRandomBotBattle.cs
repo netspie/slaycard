@@ -1,7 +1,11 @@
-﻿using Mediator;
+﻿using FluentValidation;
+using Mediator;
 using Slaycard.Api.Features.Combats.Domain;
 
 namespace Slaycard.Api.Features.Combats.UseCases;
+
+public record StartRandomBotBattleApiCommand(
+    string PlayerId);
 
 public static class StartRandomBotBattleRoute
 {
@@ -14,12 +18,6 @@ public static class StartRandomBotBattleRoute
                 mediator.Send(new StartRandomBotBattleCommand(command.PlayerId));
             });
 }
-
-public record StartRandomBotBattleApiCommand(
-    string PlayerId);
-
-public record StartRandomBotBattleCommand(
-    string PlayerId) : ICommand;
 
 public record StartRandomBotBattleCommandHandler(
     IBattleRepository Repository) : ICommandHandler<StartRandomBotBattleCommand>
@@ -39,3 +37,14 @@ public record StartRandomBotBattleCommandHandler(
         return new();
     }
 }
+
+public class StartRandomBotBattleCommandHandlerValidator : AbstractValidator<StartRandomBotBattleCommand>
+{
+    public StartRandomBotBattleCommandHandlerValidator()
+    {
+        RuleFor(q => q.PlayerId).NotEmpty();
+    }
+}
+
+public record StartRandomBotBattleCommand(
+    string PlayerId) : ICommand;
