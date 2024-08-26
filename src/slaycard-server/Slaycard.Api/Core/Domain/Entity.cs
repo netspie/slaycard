@@ -18,15 +18,17 @@ public class Entity<TId> : IEntity<TId>
     public override string ToString()
     {
         var result = Id.ToString();
+        if (result is null)
+            return $"Error occured while .ToString()";
 
         var type = GetType();
         var nameProperty = type.GetProperty("Name");
-        if (nameProperty != null)
-        {
-            var name = nameProperty.GetValue(this) as string;
-            if (!name.IsNullOrEmpty())
-                result = $"{name} - {Id}";
-        }
+        if (nameProperty is null)
+            return $"Error occured while .ToString()";
+        
+        var name = nameProperty.GetValue(this) as string;
+        if (!name.IsNullOrEmpty())
+            result = $"{name} - {Id}";
 
         return result;
     }

@@ -163,16 +163,16 @@ public class ChainedOperation<TId> : IChainedOperation<TId>
 
     public IChainedOperation<TId> SetActionDone(string name, TId? userId = null)
     {
-        if (!IsSuccess)
-            ;// return this;
+        //if (!IsSuccess)
+            // return this;
 
         return _controller.SetActionDone(name, userId);
     }
 
     public IChainedOperation<TId> SetActionExpectedNext(string name, ActionRepeat repeat = default)
     {
-        if (!IsSuccess)
-            ;// return this;
+        //if (!IsSuccess)
+            // return this;
 
         return _controller.SetActionExpectedNext(name, repeat);
     }
@@ -182,16 +182,16 @@ public class ChainedOperation<TId> : IChainedOperation<TId>
 
     public IChainedOperation<TId> By(TId[] userIds, bool mustObeyOrder = false)
     {
-        if (!IsSuccess)
-            ;// return this;
+        //if (!IsSuccess)
+            // return this;
 
         return _controller.By(userIds, mustObeyOrder);
     }
 
     public IChainedOperation<TId> Or(string name, ActionRepeat repeat = ActionRepeat.Single)
     {
-        if (!IsSuccess)
-            ;// return this;
+        //if (!IsSuccess)
+            // return this;
 
         return _controller.Or(name, repeat);
     }
@@ -242,7 +242,7 @@ public class ActionInfo<TId>
 
         // Check if given action is even expected 
         var action = Actions.FirstOrDefault(a => a.Name == name);
-        if (!name.IsNullOrEmpty() && action is null)
+        if (!name.IsNullOrEmpty() || action is null)
             return false;
 
         if (MustObeyOrder && !ExpectedPlayers.IsNullOrEmpty())
@@ -306,7 +306,7 @@ public class ActionInfo<TId>
 
     public bool RequiresUserAction() => ExpectedPlayers.Any();
 
-    public ActionData<TId> GetAction(string name) =>
+    public ActionData<TId>? GetAction(string name) =>
         Actions.FirstOrDefault(a => a.Name == name);
 
     public string[] GetActionNames() =>

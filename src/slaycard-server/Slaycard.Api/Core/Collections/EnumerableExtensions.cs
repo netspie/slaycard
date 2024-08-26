@@ -2,23 +2,19 @@
 {
     public static class EnumerableExtensions
     {
-        public static T[] AsArray<T>(this T @object) =>
-            new T[] { @object };
+        public static T[] AsArray<T>(this T @object) => [@object];
 
         public static T? FirstOfType<T>(this IEnumerable<object> enumerable) =>
             enumerable.OfType<T>().FirstOrDefault();
 
-        public static T SingleOfType<T>(this IEnumerable<object> enumerable) =>
+        public static T? SingleOfType<T>(this IEnumerable<object> enumerable) =>
             enumerable.OfType<T>().SingleOrDefault();
 
-        public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable) =>
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T>? enumerable) =>
             enumerable is null || enumerable.Count() <= 0;
 
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> enumerable, Action<T> itemAction)
         {
-            if (enumerable == null)
-                return null;
-
             foreach (var item in enumerable)
             {
                 if (item != null)
@@ -30,9 +26,6 @@
 
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> enumerable, Action<T, int> itemAction)
         {
-            if (enumerable == null)
-                return null;
-
             int i = 0;
             foreach (var item in enumerable)
             {
