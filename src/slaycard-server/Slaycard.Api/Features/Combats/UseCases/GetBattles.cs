@@ -17,7 +17,7 @@ public static class GetBattlesRoute
             (IMediator mediator,
             [AsParameters] GetBattlesApiQuery query) =>
             {
-                mediator.Send(new GetBattlesQuery(query.Offset, query.Limit));
+                return mediator.Send(new GetBattlesQuery(query.Offset, query.Limit));
             });
 }
 
