@@ -1,4 +1,5 @@
 ﻿using Core.Domain;
+using Slaycard.Api.Core.Domain;
 using Slaycard.Api.Features.Combats.Domain.Events;
 
 namespace Slaycard.Api.Features.Combats.Domain;
@@ -15,7 +16,7 @@ public class Battle : Entity<BattleId>
     {
         Players = players.ToArray();
         if (Players.Length < 2)
-            throw new Exception("cant_have_less_than_two_players_err");
+            throw new DomainException("battle_cant_have_less_than_two_players_err");
 
         PlayerActionController.SetActionExpectedNext(nameof(Start)).By(Players.GetIds());
 
@@ -31,7 +32,7 @@ public class Battle : Entity<BattleId>
     public void Start(PlayerId playerId)
     {
         if (!PlayerActionController.CanMakeAction(nameof(Start), playerId))
-            throw new Exception("cant_start_the_battle_again_err");
+            throw new DomainException("cant_start_the_battle_again_err");
 
         AddEvent(new PlayerStartedBattleEvent(
             Id, playerId));
@@ -51,10 +52,10 @@ public class Battle : Entity<BattleId>
         Random? random = null)
     {
         if (IsGameOver)
-            throw new Exception("cant_continue_if_game_over_err");
+            throw new DomainException("cant_continue_if_game_over_err");
 
         if (!UnitActionController.CanMakeAction(nameof(ApplyArtifact), originUnitId))
-            throw new Exception("cant_perform_this_operation_err");
+            throw new DomainException("cant_perform_this_operation_err");
 
         AddEvents(
             Players.ApplyArtifact(

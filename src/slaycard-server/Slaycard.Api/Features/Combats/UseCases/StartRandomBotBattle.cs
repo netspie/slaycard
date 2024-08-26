@@ -15,7 +15,7 @@ public static class StartRandomBotBattleRoute
             (IMediator mediator,
             StartRandomBotBattleApiCommand command) =>
             {
-                mediator.Send(new StartRandomBotBattleCommand(command.PlayerId));
+                return mediator.Send(new StartRandomBotBattleCommand(command.PlayerId));
             });
 }
 

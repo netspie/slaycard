@@ -1,5 +1,5 @@
-﻿using Core.Collections;
-using Core.Domain;
+﻿using Core.Domain;
+using Slaycard.Api.Core.Domain;
 
 namespace Slaycard.Api.Features.Combats.Domain;
 
@@ -15,7 +15,7 @@ public class Player : IEntity<PlayerId>
 
         Units = units.ToArray();
         if (Units.Length == 0)
-            throw new Exception("cant_have_zero_units_err");
+            throw new DomainException("player_cant_have_zero_units_err");
     }
 
     public IDomainEvent[] ApplyArtifact(

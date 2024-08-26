@@ -18,7 +18,10 @@ public class ValidationBehaviour<T, TResult> : IPipelineBehavior<T, TResult>
         CancellationToken ct, 
         MessageHandlerDelegate<T, TResult> next)
     {
-        await _validator.ValidateAsync(message);
+        var result = await _validator.ValidateAsync(message);
+        if (!result.IsValid)
+            throw new Exception(result.ToString());
+
         return await next(message, ct);
     }
 }
