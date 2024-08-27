@@ -41,12 +41,11 @@ public class ExceptionMiddleware
         context.Response.StatusCode = statusCode;
         context.Response.ContentType = "application/json";
 
-        var result = new
-        {
-            status = statusCode,
-            message = exception.Message
-        };
+        var error = new ApiError(
+            statusCode, exception.Message);
 
-        return context.Response.WriteAsJsonAsync(result);
+        return context.Response.WriteAsJsonAsync(error);
     }
 }
+
+public record ApiError(int Status, string Message);

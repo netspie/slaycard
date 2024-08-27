@@ -20,7 +20,7 @@ public class ValidationBehaviour<T, TResult> : IPipelineBehavior<T, TResult>
     {
         var result = await _validator.ValidateAsync(message);
         if (!result.IsValid)
-            throw new Exception(result.ToString());
+            throw new ValidationException(result.ToString());
 
         return await next(message, ct);
     }

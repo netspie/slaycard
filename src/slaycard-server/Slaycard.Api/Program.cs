@@ -34,3 +34,5 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseCombatsModule();
 
 app.Run();
+
+public partial class Program {}

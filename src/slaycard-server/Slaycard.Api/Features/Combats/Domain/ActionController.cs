@@ -242,7 +242,7 @@ public class ActionInfo<TId>
 
         // Check if given action is even expected 
         var action = Actions.FirstOrDefault(a => a.Name == name);
-        if (!name.IsNullOrEmpty() || action is null)
+        if (!name.IsNullOrEmpty() && action is null)
             return false;
 
         if (MustObeyOrder && !ExpectedPlayers.IsNullOrEmpty())
@@ -260,6 +260,9 @@ public class ActionInfo<TId>
         }
         else
         {
+            if (action is null) 
+                return false;
+
             if (action.Repeat is ActionRepeat.Multiple)
                 return true;
 

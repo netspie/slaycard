@@ -1,4 +1,5 @@
-﻿using Slaycard.Api.Features.Combats.Domain;
+﻿using Slaycard.Api.Core.Domain;
+using Slaycard.Api.Features.Combats.Domain;
 
 namespace Slaycard.Tests.Features.Combats.UnitTests;
 
@@ -7,7 +8,7 @@ internal class BattleTests
     [Test]
     public void _Throws_IfHasLessThanTwoPlayers()
     {
-        Assert.Throws<Exception>(() => new Battle(new BattleId(), []));
+        Assert.Throws<DomainException>(() => new Battle(new BattleId(), []));
     }
 
     [Test]
@@ -17,8 +18,8 @@ internal class BattleTests
 
         Assert.DoesNotThrow(() => battle.Start(battle.Players[0].Id));
         Assert.DoesNotThrow(() => battle.Start(battle.Players[1].Id));
-        Assert.Throws<Exception>(() => battle.Start(battle.Players[0].Id));
-        Assert.Throws<Exception>(() => battle.Start(battle.Players[1].Id));
+        Assert.Throws<DomainException>(() => battle.Start(battle.Players[0].Id));
+        Assert.Throws<DomainException>(() => battle.Start(battle.Players[1].Id));
     }
 
     [Test]
@@ -35,7 +36,7 @@ internal class BattleTests
             random: new Random(1));
 
         Assert.DoesNotThrow(attackByUnit1.Invoke);
-        Assert.Throws<Exception>(attackByUnit1.Invoke);
+        Assert.Throws<DomainException>(attackByUnit1.Invoke);
 
         Assert.IsTrue(battle.Players[1].Units[0].CombatStats.HP.CalculatedValue == 0);
         Assert.IsTrue(battle.IsGameOver);
@@ -56,7 +57,7 @@ internal class BattleTests
             random: new Random(8));
 
         Assert.DoesNotThrow(attackByUnit1.Invoke);
-        Assert.Throws<Exception>(attackByUnit1.Invoke);
+        Assert.Throws<DomainException>(attackByUnit1.Invoke);
         Assert.IsTrue(battle.Players[1].Units[0].CombatStats.HP.CalculatedValue == 1);
         Assert.IsFalse(battle.IsGameOver);
     }
@@ -76,7 +77,7 @@ internal class BattleTests
             random: new Random(7));
 
         Assert.DoesNotThrow(attackByUnit1.Invoke);
-        Assert.Throws<Exception>(attackByUnit1.Invoke);
+        Assert.Throws<DomainException>(attackByUnit1.Invoke);
 
         Assert.IsTrue(battle.Players[1].Units[0].CombatStats.HP.CalculatedValue == 8);
         Assert.IsFalse(battle.IsGameOver);
