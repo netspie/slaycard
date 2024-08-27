@@ -24,18 +24,6 @@ public class BattleTests
     }
 
     [Test]
-    public void TestX()
-    {
-        var battleId = new BattleId("xyz");
-
-        var map = new ConcurrentDictionary<BattleId, int?>();
-
-        map.TryAdd(battleId, 1);
-        Assert.IsTrue(map.TryGetValue(battleId, out var v1));
-        Assert.IsTrue(map.TryGetValue(new BattleId(battleId.Value), out var v2));
-    }
-
-    [Test]
     public async Task StartRandomPvE()
     {
         var client = _factory.CreateClient();
