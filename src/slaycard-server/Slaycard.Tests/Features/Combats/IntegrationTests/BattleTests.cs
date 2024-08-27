@@ -24,7 +24,7 @@ public class BattleTests
     }
 
     [Test]
-    public async Task StartBotBattle_IsSuccess()
+    public async Task StartRandomPvE()
     {
         var client = _factory.CreateClient();
 
@@ -46,6 +46,7 @@ public class BattleTests
         var responseJson = await response.Content.ReadFromJsonAsync<ApiError>();
         Assert.NotNull(responseJson);
         Assert.That(responseJson.Status, Is.EqualTo(400));
-        Assert.That(responseJson.Message, Is.EqualTo("'Player Id' must not be empty."));
+        Assert.That(responseJson.Message, Is.EqualTo(
+            "'PlayerId' must be a valid guid."));
     }
 }

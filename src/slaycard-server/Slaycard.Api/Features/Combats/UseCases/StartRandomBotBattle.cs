@@ -1,32 +1,32 @@
 ﻿using Core.Domain;
 using FluentValidation;
-using LanguageExt;
 using Mediator;
 using Slaycard.Api.Features.Combats.Domain;
 using Slaycard.Api.Features.Combats.Domain.Artifacts;
+using Slaycard.Api.Features.Combats.UseCases.Common;
 
 namespace Slaycard.Api.Features.Combats.UseCases;
 
-public record StartRandomBotBattleApiCommand(
+public record StartRandomPvEBattleApiCommand(
     string PlayerId);
 
-public static class StartRandomBotBattleRoute
+public static class StartRandomPvEBattleRoute
 {
-    public static void InitStartRandomBotBattleRoute(this IEndpointRouteBuilder app) => app.MapPost(
+    public static void InitStartRandomPvEBattleRoute(this IEndpointRouteBuilder app) => app.MapPost(
         pattern: "/battles/startRandomPvE",
         handler: 
             (IMediator mediator,
-            StartRandomBotBattleApiCommand command) =>
+            StartRandomPvEBattleApiCommand command) =>
             {
-                return mediator.Send(new StartRandomBotBattleCommand(command.PlayerId));
+                return mediator.Send(new StartRandomPvEBattleCommand(command.PlayerId));
             });
 }
 
 public record StartRandomBotBattleCommandHandler(
-    IBattleRepository Repository) : ICommandHandler<StartRandomBotBattleCommand>
+    IBattleRepository Repository) : ICommandHandler<StartRandomPvEBattleCommand>
 {
     public async ValueTask<Mediator.Unit> Handle(
-        StartRandomBotBattleCommand command, CancellationToken ct)
+        StartRandomPvEBattleCommand command, CancellationToken ct)
     {
         var battle = new Battle(
             new BattleId("xyz"),
@@ -77,13 +77,14 @@ public record StartRandomBotBattleCommandHandler(
     ];
 }
 
-public class StartRandomBotBattleCommandHandlerValidator : AbstractValidator<StartRandomBotBattleCommand>
+public class StartRandomPvEBattleCommandHandlerValidator : AbstractValidator<StartRandomPvEBattleCommand>
 {
-    public StartRandomBotBattleCommandHandlerValidator()
+    public StartRandomPvEBattleCommandHandlerValidator()
     {
-        RuleFor(q => q.PlayerId).NotEmpty();
+        RuleFor(q => q.PlayerId)
+            .MustBeGuid();
     }
 }
 
-public record StartRandomBotBattleCommand(
+public record StartRandomPvEBattleCommand(
     string PlayerId) : ICommand;

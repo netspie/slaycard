@@ -15,7 +15,7 @@ public static class SlaycardCombatsModule
 
     public static IEndpointRouteBuilder UseCombatsModule(this IEndpointRouteBuilder app)
     {
-        app.InitStartRandomBotBattleRoute();
+        app.InitStartRandomPvEBattleRoute();
         app.InitGetBattleRoute();
         app.InitGetBattlesRoute();
 
