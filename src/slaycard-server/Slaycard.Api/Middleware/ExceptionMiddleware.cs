@@ -35,6 +35,7 @@ public class ExceptionMiddleware
         {
             ValidationException => HttpStatusCode.BadRequest,
             DomainException => HttpStatusCode.BadRequest,
+            FileNotFoundException => HttpStatusCode.NotFound,
             _ => HttpStatusCode.InternalServerError,
         });
 

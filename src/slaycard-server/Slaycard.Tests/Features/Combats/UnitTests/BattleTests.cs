@@ -83,7 +83,7 @@ internal class BattleTests
         Assert.IsFalse(battle.IsGameOver);
     }
 
-    public static Battle CreateBattle(int unitStatValues = 1, bool start = true)
+    public static Battle CreateBattle(int unitStatValues = 1, bool start = true, string? id = null)
     {
         var unit1 = UnitTests_.CreateUnit("unit-1", unitStatValues);
         var unit2 = UnitTests_.CreateUnit("unit-2", unitStatValues);
@@ -92,7 +92,7 @@ internal class BattleTests
         var player2 = new Player(new PlayerId("player-2"), [unit2]);
 
         var battle = new Battle(
-            new BattleId("battle-1"), [player1, player2]);
+            new BattleId(id is not null ? id : "battle-1"), [player1, player2]);
 
         if (start)
         {

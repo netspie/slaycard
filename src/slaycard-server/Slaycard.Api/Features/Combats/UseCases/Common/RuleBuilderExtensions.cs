@@ -20,6 +20,6 @@ public static class RuleBuilderExtensions
                 Guid.TryParse(str, out _) : false;
 
         protected override string GetDefaultMessageTemplate(string errorCode) =>
-            "'PlayerId' must be a valid guid.";
+            "The id must be a valid guid.";
     }
 }

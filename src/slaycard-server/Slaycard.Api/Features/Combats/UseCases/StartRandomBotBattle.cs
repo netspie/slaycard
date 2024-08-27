@@ -35,7 +35,9 @@ public record StartRandomBotBattleCommandHandler(
                 new Player(new PlayerId("bot"), CreateDefaultBotUnits()),
             ]);
         
-        await Repository.Add(battle);
+        var added = await Repository.Add(battle);
+        if (!added)
+            throw new Exception("Could not add new battle");
 
         return new Mediator.Unit();
     }

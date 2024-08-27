@@ -16,8 +16,8 @@ public class InMemoryBattleRepository : IBattleRepository
 
     public Task<Battle> Get(BattleId id)
     {
-        if (!_battles.TryGetValue(id, out Battle? battle))  
-            throw new Exception("There is no battle of given id ongoing");
+        if (!_battles.TryGetValue(id, out Battle? battle))
+            throw new FileNotFoundException("There is no battle of given id ongoing");
 
         return Task.FromResult(battle);
     }

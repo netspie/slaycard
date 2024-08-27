@@ -3,7 +3,6 @@
 namespace Core.Domain;
 
 public class Entity<TId> : IEntity<TId>
-    where TId : class
 {
     public TId Id { get; }
     public Entity(TId id) => Id = id;
@@ -15,8 +14,11 @@ public class Entity<TId> : IEntity<TId>
     protected void AddEvent(IDomainEvent ev) => _events.Add(ev);
     protected void AddEvents(IEnumerable<IDomainEvent> events) => events.ForEach(AddEvent);
 
-    public override string ToString()
+    public override string? ToString()
     {
+        if (Id is null)
+            return base.ToString();
+
         var result = Id.ToString();
         if (result is null)
             return $"Error occured while .ToString()";
@@ -36,11 +38,13 @@ public class Entity<TId> : IEntity<TId>
     public static implicit operator bool(Entity<TId> v) => v is not null;
 
     public override bool Equals(object? obj) =>
-        obj is Entity<TId> entity ?
-            entity.Id == Id :
+        obj is Entity<TId> entity && entity.Id is not null ?
+            entity.Id.Equals(Id) :
             false;
 
-    public override int GetHashCode() => Id.GetHashCode();
+    public override int GetHashCode() =>
+        Id is not null ?
+            Id.GetHashCode() : default;
 }
 
 public interface IEntity<TId>
@@ -68,6 +72,6 @@ public interface IDomainEvent
 public abstract record EntityId(string Value)
 {
     public static implicit operator string(EntityId id) => id.Value;
-
+    public override int GetHashCode() => Value.GetHashCode();
     public static string NewGuid => Guid.NewGuid().ToString();
 }

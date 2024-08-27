@@ -32,7 +32,7 @@ public record GetBattlesQueryHandler(
             query.Limit);
 
         var battleDTOs = battles
-            .Map(b => new BattleDTO(b.Id, b.TimeCreated))
+            .Map(b => new BattleDTO(b.Id.Value, b.TimeCreated))
             .ToArray();
 
         return new GetBattlesQueryResponse(battleDTOs);

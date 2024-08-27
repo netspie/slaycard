@@ -2,6 +2,7 @@
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using Slaycard.Api.Features.Combats.Domain;
+using Slaycard.Api.Features.Combats.UseCases.Common;
 using static Slaycard.Api.Features.Combats.UseCases.GetBattleQueryResponse;
 
 namespace Slaycard.Api.Features.Combats.UseCases;
@@ -35,7 +36,7 @@ public record GetBattleQueryHandler(
 
         return new GetBattleQueryResponse(  
             new BattleDTO(
-                battle.Id,
+                battle.Id.Value,
                 players));
     }
 }
@@ -44,7 +45,8 @@ public class GetBattleQueryHandlerValidator : AbstractValidator<GetBattleQuery>
 {
     public GetBattleQueryHandlerValidator()
     {
-        RuleFor(q => q.BattleId).NotEmpty();
+        RuleFor(q => q.BattleId)
+            .MustBeGuid();
     }
 }
 

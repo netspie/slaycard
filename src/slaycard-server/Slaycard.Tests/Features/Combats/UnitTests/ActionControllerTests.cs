@@ -117,15 +117,16 @@ public class ActionControllerTests
     [Test]
     public void SetActionExpectedNext_DoesNotChangeAction_IfOnlyMultipleRepeatActionDone()
     {
-        var controller = new ActionController<object>() as ActionController<object>;
+        var controller = new ActionController<object>();
+
         Assert.IsTrue(controller
             .SetActionExpectedNext(nameof(DoSomething), ActionRepeat.Multiple)
             .Or(DoSomethingElse)
             .IsSuccess);
 
-        Assert.IsFalse(controller.ActionInfo.GetAction(nameof(DoSomething)).DoneBefore);
+        Assert.IsFalse(controller.ActionInfo.GetAction(nameof(DoSomething))?.DoneBefore);
         Assert.IsTrue(controller.SetActionDone(nameof(DoSomething)).IsSuccess);
-        Assert.IsTrue(controller.ActionInfo.GetAction(nameof(DoSomething)).DoneBefore);
+        Assert.IsTrue(controller.ActionInfo.GetAction(nameof(DoSomething))?.DoneBefore);
 
         Assert.IsTrue(controller.SetActionExpectedNext(nameof(DoSomethingElseElse)).IsSuccess);
         Assert.IsNull(controller.ActionInfo.GetAction(nameof(DoSomethingElseElse)));
