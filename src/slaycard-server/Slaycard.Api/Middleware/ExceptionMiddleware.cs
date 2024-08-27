@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Slaycard.Api.Core.Auth;
 using Slaycard.Api.Core.Domain;
 using System.Net;
 
@@ -36,6 +37,7 @@ public class ExceptionMiddleware
             ValidationException => HttpStatusCode.BadRequest,
             DomainException => HttpStatusCode.BadRequest,
             FileNotFoundException => HttpStatusCode.NotFound,
+            NotAuthorizedException => HttpStatusCode.Unauthorized,
             _ => HttpStatusCode.InternalServerError,
         });
 

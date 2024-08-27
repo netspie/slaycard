@@ -41,9 +41,9 @@ public record GetBattleQueryHandler(
     }
 }
 
-public class GetBattleQueryHandlerValidator : AbstractValidator<GetBattleQuery>
+public class GetBattleQueryValidator : AbstractValidator<GetBattleQuery>
 {
-    public GetBattleQueryHandlerValidator()
+    public GetBattleQueryValidator()
     {
         RuleFor(q => q.BattleId)
             .MustBeGuid();

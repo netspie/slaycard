@@ -39,9 +39,9 @@ public record GetBattlesQueryHandler(
     }
 }
 
-public class GetBattlesQueryHandlerValidator : AbstractValidator<GetBattlesQuery>
+public class GetBattlesQueryValidator : AbstractValidator<GetBattlesQuery>
 {
-    public GetBattlesQueryHandlerValidator() 
+    public GetBattlesQueryValidator() 
     {
         RuleFor(q => q.Offset)
             .GreaterThanOrEqualTo(0);

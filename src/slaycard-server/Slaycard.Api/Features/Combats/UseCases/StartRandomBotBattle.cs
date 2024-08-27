@@ -35,9 +35,7 @@ public record StartRandomBotBattleCommandHandler(
                 new Player(new PlayerId("bot"), CreateDefaultBotUnits()),
             ]);
         
-        var added = await Repository.Add(battle);
-        if (!added)
-            throw new Exception("Could not add new battle");
+        await Repository.Add(battle);
 
         return new Mediator.Unit();
     }
@@ -79,9 +77,9 @@ public record StartRandomBotBattleCommandHandler(
     ];
 }
 
-public class StartRandomPvEBattleCommandHandlerValidator : AbstractValidator<StartRandomPvEBattleCommand>
+public class StartRandomPvEBattleCommandValidator : AbstractValidator<StartRandomPvEBattleCommand>
 {
-    public StartRandomPvEBattleCommandHandlerValidator()
+    public StartRandomPvEBattleCommandValidator()
     {
         RuleFor(q => q.PlayerId)
             .MustBeGuid();

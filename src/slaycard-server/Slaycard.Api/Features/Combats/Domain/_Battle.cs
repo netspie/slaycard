@@ -4,7 +4,7 @@ using Slaycard.Api.Features.Combats.Domain.Events;
 
 namespace Slaycard.Api.Features.Combats.Domain;
 
-public class Battle : Entity<BattleId>
+public class Battle : Entity<BattleId>, IAggregateRoot<BattleId>
 {
     public DateTime TimeCreated { get; } = DateTime.UtcNow;
 
@@ -82,6 +82,10 @@ public class Battle : Entity<BattleId>
             false;
 
     public override int GetHashCode() => Id.GetHashCode();
+
+    private int _version;
+    int IAggregateRoot.Version { get => _version; set => _version = value; }
+    public int Version => _version;
 }
 
 public record BattleId(string Value) : EntityId(Value)

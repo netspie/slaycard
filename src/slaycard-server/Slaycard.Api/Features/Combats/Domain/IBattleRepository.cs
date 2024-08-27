@@ -2,7 +2,9 @@
 
 public interface IBattleRepository
 {
-    Task<bool> Add(Battle battle);
+    Task Add(Battle battle);
+    Task Update(Battle battle);
+    Task Delete(BattleId id);
     Task<Battle> Get(BattleId id);
     Task<Battle[]> GetMany(int Offset = 0, int Limit = 25);
 }

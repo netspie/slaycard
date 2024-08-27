@@ -5,6 +5,7 @@ namespace Core.Domain;
 public class Entity<TId> : IEntity<TId>
 {
     public TId Id { get; }
+
     public Entity(TId id) => Id = id;
 
     private List<IDomainEvent> _events = new();
