@@ -54,6 +54,11 @@ public class Player : IEntity<PlayerId>
         return unit.IsAlive();
     }
 
+    public Unit? GetWeakestUnit() =>
+        Units
+            .OrderBy(u => u.CombatStats.HP.CalculatedValue)
+            .FirstOrDefault(u => u.IsAlive());
+
     public bool HasSomeUnitsAlive() =>
         Units.All(unit => unit.IsAlive());
 
@@ -78,15 +83,15 @@ public static class PlayerExtensions
         PlayerId originPlayerId,
         UnitId originUnitId,
         PlayerId targetPlayerId,
+        UnitId targetUnitId,
         ArtifactId artifactId,
-        UnitId targetUnitCardId,
         Random? random = null)
     {
         var originPlayer = players.GetOfId(originPlayerId).ThrowIfNull("origin_player_doesnt_exist_err");
         var targetPlayer = players.GetOfId(targetPlayerId).ThrowIfNull("target_player_doesnt_exist_err");
 
         return targetPlayer.ApplyArtifact(
-            battleId, originPlayer, originUnitId, artifactId, targetUnitCardId, random);
+            battleId, originPlayer, originUnitId, artifactId, targetUnitId, random);
     }
 
     public static Unit[] GetUnits(this IEnumerable<Player> players) =>

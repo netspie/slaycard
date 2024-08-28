@@ -2,8 +2,9 @@
 
 public record DamagedEvent(
     BattleId BattleId,
-    PlayerId PlayerId,
+    PlayerId OriginPlayerId,
     UnitId OriginUnitId,
+    PlayerId TargetPlayerId,
     UnitId TargetUnitId,
     double Damage,
-    bool IsCritic = false) : BattleEvent(BattleId, PlayerId);
+    bool IsCritic = false) : BattleEvent(BattleId, OriginPlayerId);

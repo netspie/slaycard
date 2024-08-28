@@ -27,7 +27,14 @@ public record AttackArtifact(ArtifactId Id) : Artifact(Id)
 
                 target.HP.Modify(-damage, Id.Value);
 
-                return new DamagedEvent(args.BattleId, args.OriginPlayer.Id, args.OriginUnit.Id, targetUnit.Id, damage, isCriticalHit);
+                return new DamagedEvent(
+                    args.BattleId, 
+                    args.OriginPlayer.Id,
+                    args.OriginUnit.Id,
+                    args.TargetPlayer.Id,
+                    targetUnit.Id, 
+                    damage, 
+                    isCriticalHit);
             })
             .ToArray();
     }

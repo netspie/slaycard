@@ -63,8 +63,8 @@ public class Battle : Entity<BattleId>, IAggregateRoot<BattleId>
                 originPlayerId,
                 originUnitId,
                 targetPlayerId,
-                artifactId,
                 targetUnitId,
+                artifactId,
                 random));
 
         if (!Players.IsUnitAlive(targetPlayerId, targetUnitId))
