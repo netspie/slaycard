@@ -32,7 +32,7 @@ public record GetBattleQueryHandler(
             new BattleId(query.BattleId));
         
         var players = battle.Players.Map(p => 
-            new PlayerDTO(p.Id)).ToArray();
+            new PlayerDTO(p.Id.Value)).ToArray();
 
         return new GetBattleQueryResponse(  
             new BattleDTO(

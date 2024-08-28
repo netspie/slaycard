@@ -1,4 +1,5 @@
-﻿using Slaycard.Api.Core.Domain;
+﻿using Core.Domain;
+using Slaycard.Api.Core.Domain;
 using Slaycard.Api.Features.Combats.Domain;
 
 namespace Slaycard.Tests.Features.Combats.UnitTests;
@@ -83,16 +84,19 @@ internal class BattleTests
         Assert.IsFalse(battle.IsGameOver);
     }
 
-    public static Battle CreateBattle(int unitStatValues = 1, bool start = true, string? id = null)
+    public static Battle CreateBattle(
+        int unitStatValues = 1, 
+        bool start = true,
+        bool guidIds = false)
     {
-        var unit1 = UnitTests_.CreateUnit("unit-1", unitStatValues);
-        var unit2 = UnitTests_.CreateUnit("unit-2", unitStatValues);
+        var unit1 = UnitTests_.CreateUnit(guidIds ? EntityId.NewGuid : "unit-1", unitStatValues);
+        var unit2 = UnitTests_.CreateUnit(guidIds ? EntityId.NewGuid : "unit-2", unitStatValues);
 
-        var player1 = new Player(new PlayerId("player-1"), [unit1]);
-        var player2 = new Player(new PlayerId("player-2"), [unit2]);
+        var player1 = new Player(new PlayerId(guidIds ? EntityId.NewGuid : "player-1"), [unit1]);
+        var player2 = new Player(new PlayerId(guidIds ? EntityId.NewGuid : "player-2"), [unit2]);
 
         var battle = new Battle(
-            new BattleId(id is not null ? id : "battle-1"), [player1, player2]);
+            new BattleId(guidIds ? EntityId.NewGuid : "battle-1"), [player1, player2]);
 
         if (start)
         {

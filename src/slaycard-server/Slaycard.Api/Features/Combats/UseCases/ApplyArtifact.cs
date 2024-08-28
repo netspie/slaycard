@@ -46,7 +46,7 @@ public record ApplyArtifactCommandHandler(
         var battle = await Repository.Get(new BattleId(command.BattleId));
 
         battle.ApplyArtifact(
-            new PlayerId(command.PlayerId),
+            new PlayerId(command.OriginPlayerId),
             new UnitId(command.OriginUnitId),
             new ArtifactId(command.ArtifactId),
             new PlayerId(command.TargetPlayerId),
@@ -65,15 +65,15 @@ public class ApplyArtifactCommandValidator : AbstractValidator<ApplyArtifactComm
         RuleFor(q => q.BattleId)
             .MustBeGuid();
 
-        RuleFor(q => q.PlayerId)
+        RuleFor(q => q.OriginPlayerId)
             .MustBeGuid();
 
         RuleFor(q => q.OriginUnitId)
             .MustBeGuid();
 
         RuleFor(q => q.ArtifactId)
-            .Must(id => id.All(char.IsLetter))
-            .WithMessage("'ArtifactId' can contain only letters ");
+            .Must(id => id is not null && id.All(char.IsLetter))
+            .WithMessage("'ArtifactId' can contain only letters");
 
         RuleFor(q => q.TargetPlayerId)
             .MustBeGuid();
@@ -85,7 +85,7 @@ public class ApplyArtifactCommandValidator : AbstractValidator<ApplyArtifactComm
 
 public record ApplyArtifactCommand(
     string BattleId,
-    string PlayerId,
+    string OriginPlayerId,
     string OriginUnitId,
     string ArtifactId,
     string TargetPlayerId,

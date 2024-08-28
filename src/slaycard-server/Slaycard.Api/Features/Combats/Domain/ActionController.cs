@@ -247,7 +247,7 @@ public class ActionInfo<TId>
 
         if (MustObeyOrder && !ExpectedPlayers.IsNullOrEmpty())
         {
-            int expectedOrderIndex = Array.FindIndex(ExpectedPlayers, id => id == userId);
+            int expectedOrderIndex = Array.FindIndex(ExpectedPlayers, id => id.Equals(userId));
             if (expectedOrderIndex < 0)
                 return false;
 

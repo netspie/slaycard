@@ -72,7 +72,6 @@ public interface IDomainEvent
 
 public abstract record EntityId(string Value)
 {
-    public static implicit operator string(EntityId id) => id.Value;
     public override int GetHashCode() => Value.GetHashCode();
     public static string NewGuid => Guid.NewGuid().ToString();
 }

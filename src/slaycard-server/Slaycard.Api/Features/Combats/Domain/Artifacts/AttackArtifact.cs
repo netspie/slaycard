@@ -25,7 +25,7 @@ public record AttackArtifact(ArtifactId Id) : Artifact(Id)
                 bool isCriticalHit = CombatFormulas.CalculateIfCriticHit(origin.Critics, target.Critics, out var criticalHitChance, random);
                 damage = isCriticalHit ? CombatFormulas.CalculateCriticalDamage(damage, random) : damage;
 
-                target.HP.Modify(-damage, Id);
+                target.HP.Modify(-damage, Id.Value);
 
                 return new DamagedEvent(args.BattleId, args.OriginPlayer.Id, args.OriginUnit.Id, targetUnit.Id, damage, isCriticalHit);
             })
