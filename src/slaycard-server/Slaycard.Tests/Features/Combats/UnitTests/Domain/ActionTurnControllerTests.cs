@@ -1,17 +1,19 @@
-﻿using Slaycard.Api.Core.Domain;
+using Slaycard.Api.Core.Domain;
 using Slaycard.Api.Features.Combats.Domain;
 
-namespace Slaycard.Tests.Features.Combats.UnitTests;
+namespace Slaycard.Tests.Features.Combats.UnitTests.Domain;
 
-public class ActionParallelControllerTests
+public class ActionTurnControllerTests
 {
     [Test]
     public void Run()
     {
-        var controller = new ActionParallelController<PlayerId>([new PlayerId("player-1")]);
+        var controller = new ActionTurnController<PlayerId>([new PlayerId("player-1")]);
 
         bool allGood = false;
-        Assert.DoesNotThrow(() => controller.Run(new PlayerId("player-1"), () => allGood = true));
+        Assert.DoesNotThrow(() => controller.Run(
+            new PlayerId("player-1"),
+            () => allGood = true));
 
         Assert.IsTrue(allGood);
     }
@@ -19,10 +21,12 @@ public class ActionParallelControllerTests
     [Test]
     public void Run_WhenNotExistingId_Throws()
     {
-        var controller = new ActionParallelController<PlayerId>([new PlayerId("player-1")]);
+        var controller = new ActionTurnController<PlayerId>([new PlayerId("player-1")]);
 
         bool allGood = false;
-        Assert.Throws<DomainException>(() => controller.Run(new PlayerId("player-2"), () => allGood = true));
+        Assert.Throws<DomainException>(() => controller.Run(
+            new PlayerId("player-2"),
+            () => allGood = true));
 
         Assert.IsFalse(allGood);
     }
@@ -33,12 +37,12 @@ public class ActionParallelControllerTests
         var id1 = new PlayerId("player-1");
         var id2 = new PlayerId("player-2");
 
-        var controller = new ActionParallelController<PlayerId>([id1, id2]);
+        var controller = new ActionTurnController<PlayerId>([id1, id2]);
 
         Assert.DoesNotThrow(() => controller.Run(id1, () => { }));
         Assert.Throws<DomainException>(() => controller.Run(id1, () => { }));
         Assert.DoesNotThrow(() => controller.Run(id2, () => { }));
         Assert.Throws<DomainException>(() => controller.Run(id2, () => { }));
-        Assert.Throws<DomainException>(() => controller.Run(id1, () => { }));
+        Assert.DoesNotThrow(() => controller.Run(id1, () => { }));
     }
 }

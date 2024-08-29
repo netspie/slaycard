@@ -2,7 +2,7 @@
 using Slaycard.Api.Core.Domain;
 using Slaycard.Api.Features.Combats.Domain;
 
-namespace Slaycard.Tests.Features.Combats.UnitTests;
+namespace Slaycard.Tests.Features.Combats.UnitTests.Domain;
 
 internal class BattleTests
 {
@@ -85,7 +85,7 @@ internal class BattleTests
     }
 
     public static Battle CreateBattle(
-        int unitStatValues = 1, 
+        int unitStatValues = 1,
         bool start = true,
         bool guidIds = false)
     {

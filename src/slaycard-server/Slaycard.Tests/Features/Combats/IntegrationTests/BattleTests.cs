@@ -52,7 +52,7 @@ public class BattleTests
     [Test]
     public async Task GetBattle()
     {
-        var battle = UnitTests.BattleTests.CreateBattle(guidIds: true);
+        var battle = UnitTests.Domain.BattleTests.CreateBattle(guidIds: true);
 
         _factory.Services.GetService<IBattleRepository, InMemoryBattleRepository>()?.Add(battle);
 
@@ -81,7 +81,7 @@ public class BattleTests
     [Test]
     public async Task ApplyArtifact()
     {
-        var battle = UnitTests.BattleTests.CreateBattle(guidIds: true);
+        var battle = UnitTests.Domain.BattleTests.CreateBattle(guidIds: true);
         _factory.Services.GetService<IBattleRepository, InMemoryBattleRepository>()?.Add(battle);
 
         var client = _factory.CreateClient();

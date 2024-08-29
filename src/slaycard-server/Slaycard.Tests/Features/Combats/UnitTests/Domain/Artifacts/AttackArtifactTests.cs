@@ -1,8 +1,9 @@
 ﻿using Slaycard.Api.Features.Combats.Domain;
 using Slaycard.Api.Features.Combats.Domain.Artifacts;
 using Slaycard.Api.Features.Combats.Domain.Events;
+using Slaycard.Tests.Features.Combats.UnitTests.Domain;
 
-namespace Slaycard.Tests.Features.Combats.UnitTests.Artifacts;
+namespace Slaycard.Tests.Features.Combats.UnitTests.Domain.Artifacts;
 
 public class AttackArtifactTests
 {
