@@ -26,6 +26,8 @@ public class Battle : Entity<BattleId>, IAggregateRoot<BattleId>
         var unitsIdsByOrder = unitsOrder.Select(i => units[i].Id).ToArray();
 
         UnitTurnController = new(unitsIdsByOrder);
+
+        AddEvent(new BattleInstantiatedEvent(Id));
     }
 
     public void Start(PlayerId playerId) =>

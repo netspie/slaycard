@@ -1,5 +1,4 @@
 ﻿using Core.Domain;
-using LanguageExt.Common;
 using Slaycard.Api.Features.Combats.Domain;
 using System.Collections.Concurrent;
 

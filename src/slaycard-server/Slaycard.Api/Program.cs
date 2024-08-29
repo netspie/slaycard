@@ -1,8 +1,5 @@
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using Mediator;
 using Slaycard.Api.Features.Combats;
-using Slaycard.Api.Features.Combats.Infrastructure.Behaviours;
+using Slaycard.Api.Features.CombatsBots;
 using Slaycard.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,13 +11,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddCombatsModule();
-
-builder.Services.AddMediator(opts => opts.ServiceLifetime = ServiceLifetime.Scoped);
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
-
-builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(PessimisticLockBattleBehaviour<,>));
+builder.Services.AddCombatsBotsModule();
 
 var app = builder.Build();
 
@@ -37,4 +28,4 @@ app.UseCombatsModule();
 
 app.Run();
 
-public partial class Program {}
+public partial class Program;

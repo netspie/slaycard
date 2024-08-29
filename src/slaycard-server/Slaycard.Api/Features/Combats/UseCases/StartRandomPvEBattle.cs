@@ -23,7 +23,7 @@ public static class StartRandomPvEBattleRoute
             });
 }
 
-public record StartRandomBotBattleCommandHandler(
+public record StartRandomPvEBattleCommandHandler(
     IPublisher Publisher,
     IBattleRepository Repository) : ICommandHandler<StartRandomPvEBattleCommand>
 {
