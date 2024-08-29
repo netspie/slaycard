@@ -24,6 +24,7 @@ public static class StartRandomPvEBattleRoute
 }
 
 public record StartRandomBotBattleCommandHandler(
+    IPublisher Publisher,
     IBattleRepository Repository) : ICommandHandler<StartRandomPvEBattleCommand>
 {
     public async ValueTask<Mediator.Unit> Handle(
@@ -37,9 +38,9 @@ public record StartRandomBotBattleCommandHandler(
             ]);
 
         battle.Players.ForEach(player => battle.Start(player.Id));
-        (battle as IEventContainer).Clear();
 
         await Repository.Add(battle);
+        await Publisher.PublishEvents(battle, ct);
 
         return new();
     }

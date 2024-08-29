@@ -66,6 +66,10 @@ public class Battle : Entity<BattleId>, IAggregateRoot<BattleId>
     public bool IsGameOver =>
         Players.IsAnyPlayerOutOfUnitsAlive();
 
+    public UnitId NextUnitId => UnitTurnController.NextUnitId;
+
+    #region Equals
+
     public override bool Equals(object? obj) =>
         obj is Battle battle?
             battle.Id == Id :
@@ -73,9 +77,15 @@ public class Battle : Entity<BattleId>, IAggregateRoot<BattleId>
 
     public override int GetHashCode() => Id.GetHashCode();
 
+    #endregion
+
+    #region Version
+
     private int _version;
     int IAggregateRoot.Version { get => _version; set => _version = value; }
     public int Version => _version;
+ 
+    #endregion
 }
 
 public record BattleId(string Value) : EntityId(Value)
