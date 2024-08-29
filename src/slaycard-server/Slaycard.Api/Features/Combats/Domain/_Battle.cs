@@ -9,8 +9,9 @@ public class Battle : Entity<BattleId>, IAggregateRoot<BattleId>
     public DateTime TimeCreated { get; } = DateTime.UtcNow;
 
     public Player[] Players { get; private set; }
-    public ActionController<PlayerId> PlayerActionController { get; private set; } = new();
-    public ActionController<UnitId> UnitActionController { get; private set; } = new();
+
+    public ActionTurnController<UnitId> UnitTurnController { get; private set; }
+    public ActionParallelController<PlayerId> PlayerActionController { get; private set; }
 
     public Battle(BattleId id, IEnumerable<Player> players) : base(id)
     {
@@ -18,30 +19,18 @@ public class Battle : Entity<BattleId>, IAggregateRoot<BattleId>
         if (Players.Length < 2)
             throw new DomainException("battle_cant_have_less_than_two_players_err");
 
-        PlayerActionController.SetActionExpectedNext(nameof(Start)).By(Players.GetIds());
+        PlayerActionController = new(Players.GetIds());
 
         var units = Players.GetUnits();
         var unitsOrder = UnitOrderCalculator.CalculateActionOrder(units);
         var unitsIdsByOrder = unitsOrder.Select(i => units[i].Id).ToArray();
 
-        UnitActionController
-            .SetActionExpectedNext(nameof(ApplyArtifact))
-            .By(unitsIdsByOrder, mustObeyOrder: true);
+        UnitTurnController = new(unitsIdsByOrder);
     }
 
-    public void Start(PlayerId playerId)
-    {
-        if (!PlayerActionController.CanMakeAction(nameof(Start), playerId))
-            throw new DomainException("cant_start_the_battle_again_err");
-
-        AddEvent(new PlayerStartedBattleEvent(
-            Id, playerId));
-
-        PlayerActionController
-            .SetActionDone(nameof(Start), playerId)
-            .SetActionExpectedNext(nameof(ApplyArtifact), ActionRepeat.Multiple)
-            .By(Players.GetIds(), mustObeyOrder: true);
-    }
+    public void Start(PlayerId playerId) =>
+        PlayerActionController.Run(playerId, () =>
+            AddEvent(new PlayerStartedBattleEvent(Id, playerId)));
 
     public void ApplyArtifact(
         PlayerId originPlayerId,
@@ -51,26 +40,27 @@ public class Battle : Entity<BattleId>, IAggregateRoot<BattleId>
         UnitId targetUnitId,
         Random? random = null)
     {
+        if (!PlayerActionController.IsAllDone)
+            throw new DomainException("cant_apply_artifact_when_all_players_not_started_err");
+
         if (IsGameOver)
             throw new DomainException("cant_continue_if_game_over_err");
 
-        if (!UnitActionController.CanMakeAction(nameof(ApplyArtifact), originUnitId))
-            throw new DomainException("cant_perform_this_operation_err");
+        UnitTurnController.Run(originUnitId, () =>
+        {
+            AddEvents(
+                Players.ApplyArtifact(
+                    battleId: Id,
+                    originPlayerId,
+                    originUnitId,
+                    targetPlayerId,
+                    targetUnitId,
+                    artifactId,
+                    random));
 
-        AddEvents(
-            Players.ApplyArtifact(
-                battleId: Id,
-                originPlayerId,
-                originUnitId,
-                targetPlayerId,
-                targetUnitId,
-                artifactId,
-                random));
-
-        if (!Players.IsUnitAlive(targetPlayerId, targetUnitId))
-            AddEvent(new GameOverEvent(BattleId: Id, WinnerId: originPlayerId));
-
-        UnitActionController.SetActionDone(nameof(ApplyArtifact), originUnitId);
+            if (!Players.IsUnitAlive(targetPlayerId, targetUnitId))
+                AddEvent(new GameOverEvent(BattleId: Id, WinnerId: originPlayerId));
+        });
     }
 
     public bool IsGameOver =>
