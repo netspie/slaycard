@@ -1,4 +1,5 @@
-﻿using Slaycard.Api.Features.Combats.Domain.Events;
+﻿using Mediator;
+using Slaycard.Api.Features.Combats.Domain.Events;
 
 namespace Slaycard.Api.Features.Combats.Infrastructure.ClientNotifications.Content;
 
@@ -9,7 +10,7 @@ public record DamagedClientNotification(
     string TargetPlayerId,
     string TargetUnitId,
     double Damage,
-    bool IsCritic);
+    bool IsCritic) : Notification("DamagedClient"), INotification;
 
 public static class DamagedEvent_To_ClientNotification_Converter
 {

@@ -24,6 +24,7 @@ public record BattleEventToClientNotificationProcessor(
 
     private static object MapSingle(IDomainEvent ev) => ev switch
     {
+        BattleInstantiatedEvent instEv => instEv.ToNotification(),
         DamagedEvent dmgEv => dmgEv.ToNotification(),
         _ => new Unit(),
     };

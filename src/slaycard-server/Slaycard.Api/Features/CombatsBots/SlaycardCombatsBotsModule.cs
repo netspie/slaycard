@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Slaycard.Api.Features.CombatsBots.Domain;
+﻿using Slaycard.Api.Features.CombatsBots.Domain;
 using Slaycard.Api.Features.CombatsBots.EventHandlers;
 using Slaycard.Api.Features.CombatsBots.Infrastructure;
 
@@ -15,8 +14,8 @@ public static class SlaycardCombatsBotsModule
         var eventQueue = new BotBattleEventQueue();
         services.AddSingleton<IBotBattleEventQueue>(eventQueue);
 
-        var botEventProcessor = new BotBattleEventProcessor(botRepository, eventQueue);
-        services.AddHostedService(sp => botEventProcessor);
+        services.AddHostedService(sp => 
+            new BotBattleEventProcessor(eventQueue, sp.GetRequiredService<IServiceProvider>()));
 
         return services;
     }
