@@ -2,15 +2,15 @@
 
 namespace Core.Domain;
 
-public class Entity<TId> : IEntity<TId>
+public class Entity<TId> : IEntity<TId>, IEventContainer
 {
     public TId Id { get; }
 
     public Entity(TId id) => Id = id;
 
     private List<IDomainEvent> _events = new();
-    public IEnumerable<IDomainEvent> Events => _events;
-    public void ClearEvents() => _events.Clear();
+    IEnumerable<IDomainEvent> IEventContainer.Events => _events;
+    void IEventContainer.Clear() => _events.Clear();
 
     protected void AddEvent(IDomainEvent ev) => _events.Add(ev);
     protected void AddEvents(IEnumerable<IDomainEvent> events) => events.ForEach(AddEvent);
@@ -46,6 +46,12 @@ public class Entity<TId> : IEntity<TId>
     public override int GetHashCode() =>
         Id is not null ?
             Id.GetHashCode() : default;
+}
+
+public interface IEventContainer
+{
+    IEnumerable<IDomainEvent> Events { get; }
+    void Clear();
 }
 
 public interface IEntity<TId>

@@ -1,4 +1,5 @@
 ﻿using Core.Domain;
+using Mediator;
 using Slaycard.Api.Core.Domain;
 using Slaycard.Api.Features.Combats.Domain;
 using Slaycard.Api.Features.Combats.Domain.Events;
@@ -12,6 +13,14 @@ public class Bot(
 {
     private readonly BattleId _battleId = battleId;
     private readonly Player[] _players = players;
+
+    public readonly List<ICommand> _commands = new();
+    public IEnumerable<ICommand> Commands => _commands;
+
+    public void HandleEvent(PlayerStartedBattleEvent ev)
+    {
+        //_commands.Add(new )
+    }
 
     public void HandleEvent(DamagedEvent ev)
     {

@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Mediator;
 using Slaycard.Api.Core.Auth;
+using Slaycard.Api.Core.UseCases;
 using Slaycard.Api.Features.Combats.Domain;
 using Slaycard.Api.Features.Combats.UseCases.Common;
 
@@ -38,7 +39,8 @@ public static class ApplyArtifactRoute
 }
 
 public record ApplyArtifactCommandHandler(
-    IBattleRepository Repository) : ICommandHandler<ApplyArtifactCommand>
+    IBattleRepository Repository,
+    IPublisher Publisher) : ICommandHandler<ApplyArtifactCommand>
 {
     public async ValueTask<Mediator.Unit> Handle(
         ApplyArtifactCommand command, CancellationToken ct)
@@ -53,6 +55,7 @@ public record ApplyArtifactCommandHandler(
             new UnitId(command.TargetUnitId));
 
         await Repository.Update(battle);
+        await Publisher.PublishEvents(battle);
 
         return new Mediator.Unit();
     }

@@ -1,4 +1,5 @@
-﻿using Core.Domain;
+﻿using Core.Collections;
+using Core.Domain;
 using FluentValidation;
 using Mediator;
 using Slaycard.Api.Features.Combats.Domain;
@@ -34,7 +35,10 @@ public record StartRandomBotBattleCommandHandler(
                 new Player(new PlayerId(command.PlayerId), CreateDefaultPlayerUnits()),
                 new Player(new PlayerId("bot"), CreateDefaultBotUnits()),
             ]);
-        
+
+        battle.Players.ForEach(player => battle.Start(player.Id));
+        (battle as IEventContainer).Clear();
+
         await Repository.Add(battle);
 
         return new Mediator.Unit();
