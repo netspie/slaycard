@@ -41,7 +41,7 @@ public record StartRandomBotBattleCommandHandler(
 
         await Repository.Add(battle);
 
-        return new Mediator.Unit();
+        return new();
     }
 
     private static Domain.Unit[] CreateDefaultPlayerUnits() =>

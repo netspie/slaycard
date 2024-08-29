@@ -1,6 +1,6 @@
 ﻿namespace Slaycard.Api.Features.Combats.UseCases.Common;
 
-public interface IBattleCommand
+public interface IBattleOngoingCommand
 {
     string BattleId { get; }
 }

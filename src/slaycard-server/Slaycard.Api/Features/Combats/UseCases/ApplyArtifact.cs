@@ -57,7 +57,7 @@ public record ApplyArtifactCommandHandler(
         await Repository.Update(battle);
         await Publisher.PublishEvents(battle);
 
-        return new Mediator.Unit();
+        return new();
     }
 }
 
@@ -92,4 +92,4 @@ public record ApplyArtifactCommand(
     string OriginUnitId,
     string ArtifactId,
     string TargetPlayerId,
-    string TargetUnitId) : ICommand;
+    string TargetUnitId) : ICommand, IBattleOngoingCommand;
