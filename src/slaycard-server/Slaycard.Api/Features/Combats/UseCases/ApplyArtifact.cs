@@ -3,7 +3,6 @@ using Mediator;
 using Slaycard.Api.Core.Auth;
 using Slaycard.Api.Features.Combats.Domain;
 using Slaycard.Api.Features.Combats.UseCases.Common;
-using System.ComponentModel;
 
 namespace Slaycard.Api.Features.Combats.UseCases;
 

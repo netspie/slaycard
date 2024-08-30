@@ -7,5 +7,8 @@ public record ClientBattleNotification(
     MetaData Metadata,
     object[] Notifications) : INotification
 {
-    public record MetaData(string NextUnitId);
+    public record MetaData(
+        string BattleId,
+        string NextPlayerId,
+        string NextUnitId);
 };

@@ -2,4 +2,5 @@
 
 public record GameOverEvent(
     BattleId BattleId,
-    PlayerId WinnerId) : BattleEvent(BattleId, WinnerId);
+    PlayerId WinnerId,
+    PlayerId[] PlayerIds) : BattleEvent(BattleId, WinnerId);

@@ -10,7 +10,7 @@ public record DamagedClientNotification(
     string TargetPlayerId,
     string TargetUnitId,
     double Damage,
-    bool IsCritic) : Notification("DamagedClient"), INotification;
+    bool IsCritic) : Notification("Damaged"), INotification;
 
 public static class DamagedEvent_To_ClientNotification_Converter
 {

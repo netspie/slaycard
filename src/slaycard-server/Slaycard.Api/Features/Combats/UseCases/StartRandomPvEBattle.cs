@@ -4,6 +4,7 @@ using FluentValidation;
 using Mediator;
 using Slaycard.Api.Features.Combats.Domain;
 using Slaycard.Api.Features.Combats.Domain.Artifacts;
+using Slaycard.Api.Features.Combats.Domain.Events;
 using Slaycard.Api.Features.Combats.UseCases.Common;
 
 namespace Slaycard.Api.Features.Combats.UseCases;
@@ -34,13 +35,16 @@ public record StartRandomPvEBattleCommandHandler(
             new BattleId("xyz"),
             [
                 new Player(new PlayerId(command.PlayerId), CreateDefaultPlayerUnits()),
-                new Player(new PlayerId("bot"), CreateDefaultBotUnits()),
+                new Player(new PlayerId(EntityId.NewGuid), CreateDefaultBotUnits()),
             ]);
 
         battle.Players.ForEach(player => battle.Start(player.Id));
 
         await Repository.Add(battle);
-        await Publisher.PublishEvents(battle, ct);
+        await Publisher.PublishEvents(
+            battle,
+            additionalEvents: [new BotCreatedEvent(battle.Id, battle.Players[1].Id)],
+            ct);
 
         return new();
     }

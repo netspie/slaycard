@@ -9,16 +9,26 @@ public static class BattlePublisherExtensions
     public static Task PublishEvents(
         this IPublisher publisher,
         Battle battle,
-        CancellationToken ct) => publisher.PublishEvents(battle, container: battle, ct);
+        IDomainEvent[] additionalEvents,
+        CancellationToken ct) => publisher.PublishEvents(battle, container: battle, additionalEvents, ct);
+
+    public static Task PublishEvents(
+        this IPublisher publisher,
+        Battle battle,
+        CancellationToken ct) => publisher.PublishEvents(battle, container: battle, additionalEvents: [], ct);
 
     public static async Task PublishEvents(
         this IPublisher publisher,
         Battle battle,
         IEventContainer container,
+        IDomainEvent[] additionalEvents,
         CancellationToken ct)
     {
         var batch = new BattleEventBatch(
-            battle.NextUnitId.Value, container.Events.ToArray());
+            battle.Id.Value, 
+            NextPlayerId: battle.CurrentPlayerId.Value, 
+            NextUnitId: battle.CurrentUnitId.Value,
+            container.Events.Concat(additionalEvents).ToArray());
 
         container.Clear();
 

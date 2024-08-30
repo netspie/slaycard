@@ -66,6 +66,11 @@ public static class EntityExtensions
         where TId : class =>
         source.FirstOrDefault(x => x.Id.Equals(id));
 
+    public static TEntity GetNotOfId<TEntity, TId>(this IEnumerable<TEntity> source, TId id)
+        where TEntity : IEntity<TId>
+        where TId : class =>
+        source.First(x => !x.Id.Equals(id));
+
     public static TId[] GetIds<TId>(this IEnumerable<IEntity<TId>> source) =>
         source.Select(item => item.Id).ToArray();
 }

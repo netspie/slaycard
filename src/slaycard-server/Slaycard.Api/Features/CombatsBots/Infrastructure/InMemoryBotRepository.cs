@@ -36,6 +36,14 @@ public class InMemoryBotRepository : IBotRepository
         return Task.CompletedTask;
     }
 
+    public Task DeleteMany(IEnumerable<PlayerId> ids)
+    {
+        foreach (var id in ids)
+            _bots.Remove(id, out var _);
+
+        return Task.CompletedTask;
+    }
+
     public Task<Bot> Get(PlayerId id)
     {
         if (!_bots.TryGetValue(id, out Bot? battle))
@@ -44,12 +52,14 @@ public class InMemoryBotRepository : IBotRepository
         return Task.FromResult(battle);
     }
 
-    public Task<Bot[]> GetMany(int Offset, int Limit)
-    {
-        return Task.FromResult(
-            _bots.Values
-                .Skip(Offset)
-                .Take(Limit)
-                .ToArray());
-    }
+    public Task<Bot[]> GetMany(IEnumerable<PlayerId> ids) =>
+        Task.FromResult(
+            ids.Select(id =>
+            {
+                _bots.TryGetValue(id, out Bot? battle);
+                return battle;
+            })
+            .Where(b => b is not null)
+            .Select(b => b!)
+            .ToArray());
 }

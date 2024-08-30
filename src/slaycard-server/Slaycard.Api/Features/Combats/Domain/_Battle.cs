@@ -27,7 +27,11 @@ public class Battle : Entity<BattleId>, IAggregateRoot<BattleId>
 
         UnitTurnController = new(unitsIdsByOrder);
 
-        AddEvent(new BattleInstantiatedEvent(Id));
+        AddEvent(
+            new BattleInstantiatedEvent(
+                Id,
+                Players,
+                UnitTurnController.Ids));
     }
 
     public void Start(PlayerId playerId) =>
@@ -38,8 +42,8 @@ public class Battle : Entity<BattleId>, IAggregateRoot<BattleId>
         PlayerId originPlayerId,
         UnitId originUnitId,
         ArtifactId artifactId,
-        PlayerId targetPlayerId,
-        UnitId targetUnitId,
+        PlayerId? targetPlayerId = null,
+        UnitId? targetUnitId = null,
         Random? random = null)
     {
         if (!PlayerActionController.IsAllDone)
@@ -47,6 +51,15 @@ public class Battle : Entity<BattleId>, IAggregateRoot<BattleId>
 
         if (IsGameOver)
             throw new DomainException("cant_continue_if_game_over_err");
+
+        // Initialize target if not specified
+        if (targetPlayerId is null || targetUnitId is null)
+        {
+            var targetPlayer = Players.GetNotOfId(originPlayerId);
+
+            targetPlayerId = targetPlayer.Id;
+            targetUnitId = targetPlayer.Units[0].Id;
+        }
 
         UnitTurnController.Run(originUnitId, () =>
         {
@@ -60,14 +73,23 @@ public class Battle : Entity<BattleId>, IAggregateRoot<BattleId>
                     artifactId,
                     random));
 
+           AddEvent(new PassedEvent(BattleId: Id, originPlayerId));
+
             if (!Players.IsUnitAlive(targetPlayerId, targetUnitId))
-                AddEvent(new GameOverEvent(BattleId: Id, WinnerId: originPlayerId));
+                AddEvent(
+                    new GameOverEvent(
+                        BattleId: Id, 
+                        WinnerId: originPlayerId,
+                        PlayerIds: Players.GetIds()));
         });
     }
 
     public bool IsGameOver =>
         Players.IsAnyPlayerOutOfUnitsAlive();
 
+    public PlayerId CurrentPlayerId => Players.GetOfUnitId(CurrentUnitId)!.Id;
+    public PlayerId NextPlayerId => Players.GetOfUnitId(NextUnitId)!.Id;
+    public UnitId CurrentUnitId => UnitTurnController.CurrentUnitId;
     public UnitId NextUnitId => UnitTurnController.NextUnitId;
 
     #region Equals

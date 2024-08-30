@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Slaycard.Api.Features.Combats.Domain;
 using Slaycard.Api.Features.Combats.Infrastructure;
+using Slaycard.Api.Features.CombatsBots.Domain;
+using Slaycard.Api.Features.CombatsBots.Infrastructure;
 using Slaycard.Api.Middleware;
 using System.Net;
 using System.Net.Http.Json;
+
 namespace Slaycard.Tests.Features.Combats.IntegrationTests;
 
 public class BattleTests
@@ -82,7 +85,8 @@ public class BattleTests
     public async Task ApplyArtifact()
     {
         var battle = UnitTests.Domain.BattleTests.CreateBattle(guidIds: true);
-        _factory.Services.GetService<IBattleRepository, InMemoryBattleRepository>()?.Add(battle);
+        await _factory.Services.GetService<IBattleRepository, InMemoryBattleRepository>()!.Add(battle);
+        await _factory.Services.GetService<IBotRepository, InMemoryBotRepository>()!.Add(new Bot(battle.Players[1].Id, battle.Id));
 
         var client = _factory.CreateClient();
         client.DefaultRequestHeaders.Add("Authorization", battle.Players[0].Id.Value);

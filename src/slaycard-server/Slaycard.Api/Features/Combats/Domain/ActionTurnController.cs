@@ -19,6 +19,7 @@ public class ActionTurnController<TId>(IEnumerable<TId> ids)
         _currentIndex = NextIndex;
     }
 
+    public TId CurrentUnitId => Ids[_currentIndex];
     public TId NextUnitId => Ids[NextIndex];
 
     private int NextIndex => Ids.Length - 1 == _currentIndex ? 0 : _currentIndex + 1;

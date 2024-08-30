@@ -62,7 +62,7 @@ public class Player : IEntity<PlayerId>
     public bool HasSomeUnitsAlive() =>
         Units.All(unit => unit.IsAlive());
 
-    private Unit? GetUnit(UnitId unitId) =>
+    public Unit? GetUnit(UnitId unitId) =>
         Units.GetOfId(unitId);
 
     public override bool Equals(object? obj) =>
@@ -77,6 +77,9 @@ public record PlayerId(string Value) : EntityId(Value);
 
 public static class PlayerExtensions
 {
+    public static Player? GetOfUnitId(this IEnumerable<Player> players, UnitId unitId) =>
+        players.FirstOrDefault(p => p.GetUnit(unitId) is not null);
+
     public static IDomainEvent[] ApplyArtifact(
         this IEnumerable<Player> players,
         BattleId battleId,
