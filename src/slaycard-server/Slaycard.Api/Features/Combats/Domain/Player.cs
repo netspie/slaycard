@@ -24,6 +24,7 @@ public class Player : IEntity<PlayerId>
         UnitId originUnitId,
         ArtifactId artifactId,
         UnitId targetUnitId,
+        RandomizerConfiguration? randomConfig,
         Random? random)
     {
         var originUnit = originPlayer
@@ -45,7 +46,7 @@ public class Player : IEntity<PlayerId>
             TargetPlayer: this, 
             [targetUnit]);
 
-        return artifact.ApplyToTarget(args, random);
+        return artifact.ApplyToTarget(args, randomConfig, random);
     }
 
     public bool IsUnitAlive(UnitId unitId)
@@ -88,13 +89,20 @@ public static class PlayerExtensions
         PlayerId targetPlayerId,
         UnitId targetUnitId,
         ArtifactId artifactId,
+        RandomizerConfiguration? randomConfig = null,
         Random? random = null)
     {
         var originPlayer = players.GetOfId(originPlayerId).ThrowIfNull("origin_player_doesnt_exist_err");
         var targetPlayer = players.GetOfId(targetPlayerId).ThrowIfNull("target_player_doesnt_exist_err");
 
         return targetPlayer.ApplyArtifact(
-            battleId, originPlayer, originUnitId, artifactId, targetUnitId, random);
+            battleId, 
+            originPlayer,
+            originUnitId,
+            artifactId,
+            targetUnitId,
+            randomConfig,
+            random);
     }
 
     public static Unit[] GetUnits(this IEnumerable<Player> players) =>

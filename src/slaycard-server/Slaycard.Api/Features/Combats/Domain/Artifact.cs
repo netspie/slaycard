@@ -6,12 +6,18 @@ namespace Slaycard.Api.Features.Combats.Domain;
 /// Artifact is an abstract creation. It can be an attack, heal, skill or anything really.
 /// </summary>
 /// <param name="Id"></param>
-public abstract record Artifact(ArtifactId Id) : IEntity<ArtifactId>
+public abstract record Artifact(
+    ArtifactId Id) : IEntity<ArtifactId>
 {
     public abstract IDomainEvent[] ApplyToTarget(
         ApplyArtifactArgs args,
+        RandomizerConfiguration? randomConfig = null,
         Random? random = null);
 }
+
+public record RandomizerConfiguration(
+    bool AlwaysHit = false,
+    bool AlwaysCritic = false);
 
 public record ArtifactId(string Value) : EntityId(Value);
 

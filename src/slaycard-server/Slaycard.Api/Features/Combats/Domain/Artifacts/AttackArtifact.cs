@@ -6,7 +6,9 @@ namespace Slaycard.Api.Features.Combats.Domain.Artifacts;
 public record AttackArtifact(ArtifactId Id) : Artifact(Id)
 {
     public override IDomainEvent[] ApplyToTarget(
-        ApplyArtifactArgs args, Random? random = null)
+        ApplyArtifactArgs args, 
+        RandomizerConfiguration? randomConfig = null,
+        Random? random = null)
     {
         var origin = args.OriginUnit.CombatStats;
         var targets = args.TargetUnits.Map(u => u.CombatStats).ToArray();
@@ -16,7 +18,7 @@ public record AttackArtifact(ArtifactId Id) : Artifact(Id)
             {
                 var target = targetUnit.CombatStats;
 
-                var isHit = CombatFormulas.CalculateIfHit(origin.Accuracy, target.Dodge, random);
+                var isHit = randomConfig?.AlwaysHit is true ? true : CombatFormulas.CalculateIfHit(origin.Accuracy, target.Dodge, random);
                 if (!isHit) 
                     return new MissedEvent(args.BattleId, args.OriginPlayer.Id, args.OriginUnit.Id, targetUnit.Id);
 
@@ -43,7 +45,9 @@ public record AttackArtifact(ArtifactId Id) : Artifact(Id)
 public record HealArtifact(ArtifactId Id) : Artifact(Id)
 {
     public override IDomainEvent[] ApplyToTarget(
-        ApplyArtifactArgs args, Random? random = null)
+        ApplyArtifactArgs args, 
+        RandomizerConfiguration? randomConfig,
+        Random? random = null)
     {
         throw new InvalidOperationException("");
     }

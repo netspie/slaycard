@@ -44,6 +44,7 @@ public class Battle : Entity<BattleId>, IAggregateRoot<BattleId>
         ArtifactId artifactId,
         PlayerId? targetPlayerId = null,
         UnitId? targetUnitId = null,
+        RandomizerConfiguration? randomConfig = null,
         Random? random = null)
     {
         if (!PlayerActionController.IsAllDone)
@@ -71,6 +72,7 @@ public class Battle : Entity<BattleId>, IAggregateRoot<BattleId>
                     targetPlayerId,
                     targetUnitId,
                     artifactId,
+                    randomConfig,
                     random));
 
            AddEvent(new PassedEvent(BattleId: Id, originPlayerId));

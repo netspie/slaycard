@@ -39,7 +39,8 @@ public static class ApplyArtifactRoute
 
 public record ApplyArtifactCommandHandler(
     IBattleRepository Repository,
-    IPublisher Publisher) : ICommandHandler<ApplyArtifactCommand>
+    IPublisher Publisher,
+    RandomizerConfiguration? RandomConfig = null) : ICommandHandler<ApplyArtifactCommand>
 {
     public async ValueTask<Mediator.Unit> Handle(
         ApplyArtifactCommand command, CancellationToken ct)
@@ -51,7 +52,8 @@ public record ApplyArtifactCommandHandler(
             new UnitId(command.OriginUnitId),
             new ArtifactId(command.ArtifactId),
             new PlayerId(command.TargetPlayerId),
-            new UnitId(command.TargetUnitId));
+            new UnitId(command.TargetUnitId),
+            RandomConfig);
 
         await Repository.Update(battle);
         await Publisher.PublishEvents(battle, ct);

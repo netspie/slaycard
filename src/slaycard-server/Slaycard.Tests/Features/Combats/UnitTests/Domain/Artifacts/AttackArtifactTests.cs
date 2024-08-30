@@ -25,11 +25,11 @@ public class AttackArtifactTests
 
         var artifact = new AttackArtifact(new ArtifactId("attack"));
 
-        var events = artifact.ApplyToTarget(args, new Random(7));
+        var events = artifact.ApplyToTarget(args, random: new Random(7));
         Assert.IsTrue(events.OfType<DamagedEvent>().Any());
         Assert.IsTrue(unit2.CombatStats.HP.CalculatedValue < unit2.CombatStats.HP.OriginalValue);
         Assert.IsFalse(events.OfType<MissedEvent>().Any());
 
-        Assert.IsTrue(artifact.ApplyToTarget(args, new Random(8)).OfType<MissedEvent>().Any());
+        Assert.IsTrue(artifact.ApplyToTarget(args, random: new Random(8)).OfType<MissedEvent>().Any());
     }
 }
