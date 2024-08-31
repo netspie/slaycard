@@ -57,6 +57,7 @@ public record BattleEventsHandler(
                 var playerIds = over.PlayerIds.Map(id => new PlayerId(id));
 
                 await BotRepository.DeleteMany(playerIds);
+                await Ex.TryCatch(() => BattleRepository.Delete(new BattleId(over.BattleId)));
 
                 return;
             }

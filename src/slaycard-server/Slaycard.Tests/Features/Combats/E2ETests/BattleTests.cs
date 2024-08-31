@@ -20,7 +20,9 @@ public class BattleTests
                     builder.ConfigureServices(services =>
                     {
                         services.AddScoped(sp => 
-                            new RandomizerConfiguration(AlwaysHit: true));
+                            new RandomizerConfiguration(
+                                FixedStatsValue: 1,
+                                AlwaysHit: true));
                     }));
     }
 
@@ -75,19 +77,10 @@ public class BattleTests
 
         // Get Battle Changed
         var getBattleChangedResponse = await client.GetAsync($"/battles/{battle.Id}/changed?version={battle.Version}");
-        Assert.That(getBattleChangedResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-
-        var getBattleChangedObject = await getBattleChangedResponse.Content.ReadFromJsonAsync<GetBattleChangedQueryResponse>();
-        Assert.IsNotNull(getBattleChangedObject);
-        Assert.That(getBattleChangedObject.DTO.Changed, Is.EqualTo(true));
+        Assert.That(getBattleChangedResponse.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
 
         // Get Battle
         getBattleResponse = await client.GetAsync($"/battles/{battleId}");
-        Assert.That(getBattleResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-
-        getBattleObject = await getBattleResponse.Content.ReadFromJsonAsync<GetBattleQueryResponse>();
-        Assert.IsNotNull(getBattleObject);
-
-        Assert.That(getBattleObject.DTO.Version, Is.EqualTo(2));
+        Assert.That(getBattleResponse.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 }

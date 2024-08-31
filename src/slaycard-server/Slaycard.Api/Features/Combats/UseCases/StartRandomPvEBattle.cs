@@ -26,7 +26,8 @@ public static class StartRandomPvEBattleRoute
 
 public record StartRandomPvEBattleCommandHandler(
     IPublisher Publisher,
-    IBattleRepository Repository) : ICommandHandler<StartRandomPvEBattleCommand>
+    IBattleRepository Repository,
+    RandomizerConfiguration? RandomConfig = null) : ICommandHandler<StartRandomPvEBattleCommand>
 {
     public async ValueTask<Mediator.Unit> Handle(
         StartRandomPvEBattleCommand command, CancellationToken ct)
@@ -34,13 +35,21 @@ public record StartRandomPvEBattleCommandHandler(
         var battle = new Battle(
             new BattleId(),
             [
-                new Player(new PlayerId(command.PlayerId), CreateDefaultPlayerUnits()),
-                new Player(new PlayerId(EntityId.NewGuid), CreateDefaultBotUnits()),
+                new Player(
+                    new PlayerId(command.PlayerId), 
+                    CreateDefaultPlayerUnits(RandomConfig?.FixedStatsValue ?? 5)),
+
+                new Player(
+                    new PlayerId(EntityId.NewGuid), 
+                    CreateDefaultBotUnits(RandomConfig?.FixedStatsValue ?? 5)),
             ]);
 
         battle.Players.ForEach(player => battle.Start(player.Id));
 
         await Repository.Add(battle);
+        if (battle.IsGameOver)
+            await Repository.Delete(battle.Id);
+
         await Publisher.PublishEvents(
             battle,
             additionalEvents: [new BotCreatedEvent(battle.Id, battle.Players[1].Id)],
@@ -49,36 +58,36 @@ public record StartRandomPvEBattleCommandHandler(
         return new();
     }
 
-    private static Domain.Unit[] CreateDefaultPlayerUnits() =>
+    private static Domain.Unit[] CreateDefaultPlayerUnits(int statsValue = 5) =>
     [
         new Domain.Unit(
             new UnitId(EntityId.NewGuid),
             new CombatStatGroup(
-                HP: new Stat(5),
-                Attack: new Stat(5),
-                Defence: new Stat(5),
-                Accuracy: new Stat(5),
-                Dodge: new Stat(5),
-                Critics: new Stat(5),
-                Speed: new Stat(5)),
+                HP: new Stat(statsValue),
+                Attack: new Stat(statsValue),
+                Defence: new Stat(statsValue),
+                Accuracy: new Stat(statsValue),
+                Dodge: new Stat(statsValue),
+                Critics: new Stat(statsValue),
+                Speed: new Stat(statsValue)),
             artifacts:
             [
                 new AttackArtifact(new ArtifactId("attack"))
             ])
     ];
 
-    private static Domain.Unit[] CreateDefaultBotUnits() =>
+    private static Domain.Unit[] CreateDefaultBotUnits(int statsValue = 5) =>
     [
         new Domain.Unit(
             new UnitId(EntityId.NewGuid),
             new CombatStatGroup(
-                HP: new Stat(5),
-                Attack: new Stat(5),
-                Defence: new Stat(5),
-                Accuracy: new Stat(5),
-                Dodge: new Stat(5),
-                Critics: new Stat(5),
-                Speed: new Stat(5)),
+                HP: new Stat(statsValue),
+                Attack: new Stat(statsValue),
+                Defence: new Stat(statsValue),
+                Accuracy: new Stat(statsValue),
+                Dodge: new Stat(statsValue),
+                Critics: new Stat(statsValue),
+                Speed: new Stat(statsValue)),
             artifacts:
             [
                 new AttackArtifact(new ArtifactId("attack"))

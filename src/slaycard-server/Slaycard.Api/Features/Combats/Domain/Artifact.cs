@@ -16,6 +16,7 @@ public abstract record Artifact(
 }
 
 public record RandomizerConfiguration(
+    int? FixedStatsValue = null,
     bool AlwaysHit = false,
     bool AlwaysCritic = false);
 

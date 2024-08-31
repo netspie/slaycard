@@ -2,7 +2,18 @@
 
 public static class Ex
 {
-    public static async Task<T?> TryCatch<T>(Func<Task<T>> action) 
+    public static async Task TryCatch(Func<Task> action)
+    {
+        try
+        {
+            await action();
+        }
+        catch (Exception)
+        {
+        }
+    }
+
+    public static async Task<T?> TryCatch<T>(Func<Task<T>> action)
     {
         try
         {
