@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Slaycard.Api.Features.Combats.Domain;
 using Slaycard.Api.Features.Combats.UseCases;
+using Slaycard.Api.Features.CombatsTimeouts;
 using System.Net;
 using System.Net.Http.Json;
 
@@ -19,10 +20,13 @@ public class BattleTests
                 builder => 
                     builder.ConfigureServices(services =>
                     {
-                        services.AddScoped(sp => 
+                        services.AddSingleton(sp => 
                             new RandomizerConfiguration(
                                 FixedStatsValue: 1,
                                 AlwaysHit: true));
+
+                        services.AddSingleton(sp =>
+                            new CombatsTimeoutWorkerConfiguration(TimeoutSeconds: 2));
                     }));
     }
 

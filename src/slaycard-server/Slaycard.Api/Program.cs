@@ -1,5 +1,6 @@
 using Slaycard.Api.Features.Combats;
 using Slaycard.Api.Features.CombatsBots;
+using Slaycard.Api.Features.CombatsTimeouts;
 using Slaycard.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddCombatsModule();
+builder.Services.AddCombatsTimeoutsModule();
 builder.Services.AddCombatsBotsModule();
 
 var app = builder.Build();

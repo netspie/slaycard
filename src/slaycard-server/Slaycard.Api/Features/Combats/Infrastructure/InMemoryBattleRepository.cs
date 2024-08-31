@@ -1,4 +1,5 @@
-﻿using Core.Domain;
+﻿using Core.Collections;
+using Core.Domain;
 using Slaycard.Api.Features.Combats.Domain;
 using System.Collections.Concurrent;
 
@@ -63,6 +64,12 @@ public class InMemoryBattleRepository : IBattleRepository
         }
 
         return Task.CompletedTask;
+    }
+
+    public async Task DeleteMany(IEnumerable<BattleId> ids)
+    {
+        foreach (var id in ids)
+            await Delete(id);
     }
 
     public Task<Battle> Get(BattleId id)
