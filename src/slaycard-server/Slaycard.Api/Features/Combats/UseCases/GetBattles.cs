@@ -1,13 +1,15 @@
 ﻿using FluentValidation;
 using Mediator;
 using Slaycard.Api.Features.Combats.Domain;
+using Slaycard.Api.Features.Combats.UseCases.Common;
 using static Slaycard.Api.Features.Combats.UseCases.GetBattlesQueryResponse;
 
 namespace Slaycard.Api.Features.Combats.UseCases;
 
 public record GetBattlesApiQuery(
     int Offset = 0,
-    int Limit = 25);
+    int Limit = 25,
+    string? PlayerId = null);
 
 public static class GetBattlesRoute
 {
@@ -17,7 +19,8 @@ public static class GetBattlesRoute
             (IMediator mediator,
             [AsParameters] GetBattlesApiQuery query) =>
             {
-                return mediator.Send(new GetBattlesQuery(query.Offset, query.Limit));
+                return mediator.Send(
+                    new GetBattlesQuery(query.Offset, query.Limit, query.PlayerId));
             });
 }
 
@@ -27,6 +30,15 @@ public record GetBattlesQueryHandler(
     public async ValueTask<GetBattlesQueryResponse> Handle(
         GetBattlesQuery query, CancellationToken ct)
     {
+        if (query.PlayerId is not null)
+        {
+            var battle = await Repository.Get(new PlayerId(query.PlayerId));
+            return new GetBattlesQueryResponse(
+            [
+                new BattleDTO(battle.Id.Value, battle.TimeCreated)
+            ]);
+        }
+
         var battles = await Repository.GetMany(
             query.Offset, 
             query.Limit);
@@ -49,12 +61,17 @@ public class GetBattlesQueryValidator : AbstractValidator<GetBattlesQuery>
         RuleFor(q => q.Limit)
             .GreaterThanOrEqualTo(1)
             .LessThanOrEqualTo(25);
+
+        RuleFor(q => q.PlayerId)
+            .MustBeGuid()
+            .When(q => q.PlayerId is not null);
     }
 }
 
 public record GetBattlesQuery(
     int Offset = 0,
-    int Limit = 25) : IQuery<GetBattlesQueryResponse>;
+    int Limit = 25,
+    string? PlayerId = null) : IQuery<GetBattlesQueryResponse>;
 
 public record GetBattlesQueryResponse(
     BattleDTO[] Battles)

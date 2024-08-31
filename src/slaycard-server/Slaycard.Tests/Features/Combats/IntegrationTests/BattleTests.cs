@@ -57,7 +57,7 @@ public class BattleTests
     {
         var battle = UnitTests.Domain.BattleTests.CreateBattle(guidIds: true);
 
-        _factory.Services.GetService<IBattleRepository, InMemoryBattleRepository>()?.Add(battle);
+        await _factory.Services.GetService<IBattleRepository, InMemoryBattleRepository>()!.Add(battle);
 
         var client = _factory.CreateClient();
 
@@ -79,6 +79,34 @@ public class BattleTests
         Assert.That(responseJson.Status, Is.EqualTo(400));
         Assert.That(responseJson.Message, Is.EqualTo(
             "The id must be a valid guid."));
+    }
+
+    [Test]
+    public async Task GetBattles()
+    {
+        var battle = UnitTests.Domain.BattleTests.CreateBattle(guidIds: true);
+
+        await _factory.Services.GetService<IBattleRepository, InMemoryBattleRepository>()!.Add(battle);
+
+        var client = _factory.CreateClient();
+
+        var response = await client.GetAsync($"/battles");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+    }
+
+    [Test]
+    public async Task GetBattles_OfPlayerId()
+    {
+        var battle = UnitTests.Domain.BattleTests.CreateBattle(guidIds: true);
+
+        await _factory.Services.GetService<IBattleRepository, InMemoryBattleRepository>()!.Add(battle);
+
+        var client = _factory.CreateClient();
+
+        var response = await client.GetAsync($"/battles?playerId={battle.Players[0].Id.Value}");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
     }
 
     [Test]

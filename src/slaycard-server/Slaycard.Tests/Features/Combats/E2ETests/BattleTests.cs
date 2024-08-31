@@ -33,11 +33,12 @@ public class BattleTests
     public async Task PerformBattle()
     {
         var client = _factory.CreateClient();
+        var playerId = Guid.NewGuid().ToString();
 
-        var response = await client.PostAsJsonAsync(
-            "/battles/startRandomPvE",
-            new { playerId = Guid.NewGuid().ToString() });
+        var startBattleResponse = await client.PostAsJsonAsync("/battles/startRandomPvE", new { playerId });
+        Assert.That(startBattleResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        var getBattlesResponse = await client.GetAsync($"/battles?playerId={playerId}");
+        Assert.That(getBattlesResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
     }
 }
