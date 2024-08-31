@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 using Mediator;
-using Slaycard.Api.Core.Auth;
 using Slaycard.Api.Features.Combats.Domain;
 using Slaycard.Api.Features.Combats.UseCases.Common;
 
 namespace Slaycard.Api.Features.Combats.UseCases;
 
 public record ApplyArtifactApiCommand(
+    string OriginPlayerId,
     string OriginUnitId,
     string ArtifactId,
     string TargetPlayerId,
@@ -22,14 +22,10 @@ public static class ApplyArtifactRoute
             IMediator mediator,
             ApplyArtifactApiCommand command) =>
             {
-                var playerId = context.Request.Headers.Authorization.FirstOrDefault();
-                if (playerId is null)
-                    throw new NotAuthorizedException();
-
                 return mediator.Send(
                     new ApplyArtifactCommand(
                         battleId,
-                        playerId,
+                        command.OriginPlayerId,
                         command.OriginUnitId,
                         command.ArtifactId,
                         command.TargetPlayerId,

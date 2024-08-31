@@ -110,19 +110,34 @@ public class BattleTests
     }
 
     [Test]
+    public async Task GetBattleChanged()
+    {
+        var battle = UnitTests.Domain.BattleTests.CreateBattle(guidIds: true);
+
+        await _factory.Services.GetService<IBattleRepository, InMemoryBattleRepository>()!.Add(battle);
+
+        var client = _factory.CreateClient();
+
+        var response = await client.GetAsync($"/battles/{battle.Id.Value}/changed?version={0}");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+    }
+
+    [Test]
     public async Task ApplyArtifact()
     {
         var battle = UnitTests.Domain.BattleTests.CreateBattle(guidIds: true);
+
         await _factory.Services.GetService<IBattleRepository, InMemoryBattleRepository>()!.Add(battle);
         await _factory.Services.GetService<IBotRepository, InMemoryBotRepository>()!.Add(new Bot(battle.Players[1].Id, battle.Id));
 
         var client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Add("Authorization", battle.Players[0].Id.Value);
 
         var response = await client.PostAsJsonAsync(
             $"/battles/{battle.Id.Value}/applyArtifact",
             new 
             {
+                OriginPlayerId = battle.Players[0].Id.Value,
                 OriginUnitId = battle.Players[0].Units[0].Id.Value,
                 ArtifactId = battle.Players[0].Units[0].Artifacts[0].Id.Value,
                 TargetPlayerId = battle.Players[1].Id.Value,

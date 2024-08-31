@@ -32,7 +32,7 @@ public record StartRandomPvEBattleCommandHandler(
         StartRandomPvEBattleCommand command, CancellationToken ct)
     {
         var battle = new Battle(
-            new BattleId("xyz"),
+            new BattleId(),
             [
                 new Player(new PlayerId(command.PlayerId), CreateDefaultPlayerUnits()),
                 new Player(new PlayerId(EntityId.NewGuid), CreateDefaultBotUnits()),

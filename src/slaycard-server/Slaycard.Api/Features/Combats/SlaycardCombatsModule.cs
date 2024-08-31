@@ -28,6 +28,7 @@ public static class SlaycardCombatsModule
     {
         app.InitStartRandomPvEBattleRoute();
         app.InitApplyArtifactRoute();
+        app.InitGetBattleChangedRoute();
         app.InitGetBattleRoute();
         app.InitGetBattlesRoute();
 

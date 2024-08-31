@@ -31,12 +31,17 @@ public record GetBattleQueryHandler(
         var battle = await Repository.Get(
             new BattleId(query.BattleId));
         
-        var players = battle.Players.Map(p => 
-            new PlayerDTO(p.Id.Value)).ToArray();
+        var players = battle.Players
+            .Map(p => 
+                new PlayerDTO(
+                    p.Id.Value, 
+                    p.Units.Map(u => new UnitDTO(u.Id.Value)).ToArray()))
+            .ToArray();
 
         return new GetBattleQueryResponse(  
             new BattleDTO(
                 battle.Id.Value,
+                battle.Version,
                 players));
     }
 }
@@ -57,8 +62,13 @@ public record GetBattleQueryResponse(
 {
     public record BattleDTO(
         string Id,
+        int Version,
         PlayerDTO[] Players);
 
     public record PlayerDTO(
+        string Id,
+        UnitDTO[] Units);
+
+    public record UnitDTO(
         string Id);
 };
