@@ -16,8 +16,6 @@ public record BattleEventsHandler(
 {
     public async ValueTask Handle(ClientBattleNotification n, CancellationToken ct)
     {
-        //BotTimeoutClock.Update(new PlayerId(n.Metadata));
-
         var ns = n.Notifications;
 
         var gameOverN = n.Notifications.OfType<GameOverClientNotification>().FirstOrDefault();
@@ -26,6 +24,17 @@ public record BattleEventsHandler(
 
         foreach (var subN in ns)
         {
+            if (subN is BattleInstantiatedClientNotification instCreated)
+            {
+                var battleId = new BattleId(instCreated.BattleId);
+
+                BotTimeoutClock.Add(
+                    new BattleId(instCreated.BattleId),
+                    instCreated.PlayerIds.Map(id => new PlayerId(id)).ToArray());
+
+                continue;
+            }
+
             if (subN is BotCreatedClientNotification botCreated)
             {
                 await BotRepository.Add(
@@ -59,9 +68,10 @@ public record BattleEventsHandler(
             if (subN is GameOverClientNotification over)
             {
                 var playerIds = over.PlayerIds.Map(id => new PlayerId(id));
-
                 await BotRepository.DeleteMany(playerIds);
                 await Ex.TryCatch(() => BattleRepository.Delete(new BattleId(over.BattleId)));
+
+                BotTimeoutClock.Remove(new BattleId(over.BattleId));
 
                 return;
             }

@@ -5,9 +5,9 @@ namespace Slaycard.Api.Features.CombatsBots.Infrastructure;
 
 public record BotTimeoutClock(int TimeoutSeconds)
 {
-    private readonly ConcurrentDictionary<PlayerId, (PlayerId id, DateTime lastTime)> _bots = new();
+    private readonly ConcurrentDictionary<BattleId, (PlayerId[] ids, DateTime lastTime)> _bots = new();
 
-    public PlayerId[] GetTimeoutBattles()
+    public PlayerId[] GetTimeoutBots()
     {
         var timeoutBots = new List<PlayerId>();
 
@@ -17,23 +17,23 @@ public record BotTimeoutClock(int TimeoutSeconds)
             if (offset < TimeSpan.FromSeconds(TimeoutSeconds))
                 continue;
 
-            timeoutBots.Add(bot.id);
+            timeoutBots.AddRange(bot.ids);
         }
 
         return timeoutBots.ToArray();
     }
 
-    public void Add(PlayerId id)
+    public void Add(BattleId battleId, PlayerId[] botIds)
     {
-        _bots.TryAdd(id, (id, DateTime.UtcNow));
+        _bots.TryAdd(battleId, (botIds, DateTime.UtcNow));
     }
 
-    public void Update(PlayerId id)
+    public void Update(BattleId id)
     {
-        _bots[id] = (id, DateTime.UtcNow);
+        _bots[id] = (_bots[id].ids, DateTime.UtcNow);
     }
 
-    public void Remove(PlayerId id)
+    public void Remove(BattleId id)
     {
         _bots.Remove(id, out var _);
     }

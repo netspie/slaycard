@@ -9,6 +9,11 @@ public static class SlaycardCombatsBotsModule
     {
         var botRepository = new InMemoryBotRepository();
         services.AddSingleton<IBotRepository>(botRepository);
+        services.AddSingleton(new BotTimeoutClock(120));
+        services.AddHostedService(sp =>
+           new BotTimeoutWorker(
+               sp,
+               sp.GetRequiredService<BotTimeoutClock>()));
 
         return services;
     }
