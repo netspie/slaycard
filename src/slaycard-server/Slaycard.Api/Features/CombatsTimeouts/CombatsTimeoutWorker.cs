@@ -2,18 +2,13 @@
 
 namespace Slaycard.Api.Features.CombatsTimeouts;
 
-public record CombatsTimeoutWorkerConfiguration(int TimeoutSeconds);
-
 public class CombatsTimeoutWorker(
     IServiceProvider serviceProvider,
-    CombatsTimeoutWorkerConfiguration configuration) : BackgroundService
+    BattleTimeoutClock TimeoutClock) : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider = serviceProvider;
-    private readonly CombatsTimeoutWorkerConfiguration _configuration = configuration;
-
-    private readonly Dictionary<BattleId, (BattleId id, DateTime lastTime)> _battles = new();
-
-    private readonly PeriodicTimer _timer = new(TimeSpan.FromSeconds(5));
+    
+    private readonly PeriodicTimer _timer = new(TimeSpan.FromSeconds(TimeoutClock.TimeoutSeconds));
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -23,17 +18,7 @@ public class CombatsTimeoutWorker(
         while (await _timer.WaitForNextTickAsync(stoppingToken) &&
             !stoppingToken.IsCancellationRequested)
         {
-            var battlesToRemove = new List<BattleId>();
-
-            foreach (var battle in _battles.Values)
-            {
-                var offset = DateTime.UtcNow - battle.lastTime;
-                if (offset < TimeSpan.FromSeconds(_configuration.TimeoutSeconds))
-                    continue;
-
-                battlesToRemove.Add(battle.id);
-            }
-
+            var battlesToRemove = TimeoutClock.GetTimeoutBattles();
             await battleRepository.DeleteMany(battlesToRemove);
         }
     }

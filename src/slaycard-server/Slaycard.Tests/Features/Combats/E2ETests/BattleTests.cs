@@ -26,7 +26,7 @@ public class BattleTests
                                 AlwaysHit: true));
 
                         services.AddSingleton(sp =>
-                            new CombatsTimeoutWorkerConfiguration(TimeoutSeconds: 2));
+                            new BattleTimeoutClock(TimeoutSeconds: 1));
                     }));
     }
 
@@ -86,5 +86,22 @@ public class BattleTests
         // Get Battle
         getBattleResponse = await client.GetAsync($"/battles/{battleId}");
         Assert.That(getBattleResponse.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public async Task Verify_That_BattleIsDeleted_When_Timeout()
+    {
+        var client = _factory.CreateClient();
+        var playerId = Guid.NewGuid().ToString();
+
+        // Start Battle
+        var startBattleResponse = await client.PostAsJsonAsync("/battles/startRandomPvE", new { playerId });
+        Assert.That(startBattleResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+        await Task.Delay(2500);
+
+        // Get Battles
+        var getBattlesResponse = await client.GetAsync($"/battles?playerId={playerId}");
+        Assert.That(getBattlesResponse.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 }
