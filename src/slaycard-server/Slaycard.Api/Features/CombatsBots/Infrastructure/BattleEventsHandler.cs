@@ -4,16 +4,20 @@ using Slaycard.Api.Features.Combats.Domain;
 using Slaycard.Api.Features.Combats.Infrastructure.ClientNotifications;
 using Slaycard.Api.Features.Combats.Infrastructure.ClientNotifications.Content;
 using Slaycard.Api.Features.CombatsBots.Domain;
+using Slaycard.Api.Features.CombatsBots.Infrastructure;
 
 namespace Slaycard.Api.Features.CombatsBots.EventHandlers;
 
 public record BattleEventsHandler(
+    BotTimeoutClock BotTimeoutClock,
     IBotRepository BotRepository,
     IBattleRepository BattleRepository) :
     INotificationHandler<ClientBattleNotification>
 {
     public async ValueTask Handle(ClientBattleNotification n, CancellationToken ct)
     {
+        //BotTimeoutClock.Update(new PlayerId(n.Metadata));
+
         var ns = n.Notifications;
 
         var gameOverN = n.Notifications.OfType<GameOverClientNotification>().FirstOrDefault();
