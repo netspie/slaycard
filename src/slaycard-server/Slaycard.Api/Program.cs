@@ -11,7 +11,7 @@ builder.Services.AddSwaggerGen(options =>
     options.CustomSchemaIds(type => type.ToString());
 });
 
-builder.Services.AddCombatsModule();
+builder.Services.AddCombatsModule(builder.Configuration);
 builder.Services.AddCombatsTimeoutsModule();
 builder.Services.AddCombatsBotsModule();
 

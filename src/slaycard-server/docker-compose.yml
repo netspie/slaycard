@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  slaycard.api:
+    image: ${DOCKER_REGISTRY-}slaycardapi
+    container_name: slaycard.api
+    build:
+      context: .
+      dockerfile: Slaycard.Api/Dockerfile
+    ports:
+      - "6000:8080"
+      - "6001:8081"
+  
+  slaycard.db:
+    image: postgres:latest
+    container_name: slaycard.db
+    environment:
+      - POSTGRES_DB=slaycard
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - slaycard-db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+volumes:
+  slaycard-db:

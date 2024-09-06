@@ -1,16 +1,19 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Mediator;
+using Microsoft.EntityFrameworkCore;
 using Slaycard.Api.Features.Combats.Domain;
 using Slaycard.Api.Features.Combats.Infrastructure;
 using Slaycard.Api.Features.Combats.Infrastructure.Behaviours;
+using Slaycard.Api.Features.Combats.Infrastructure.Persistence;
 using Slaycard.Api.Features.Combats.UseCases;
 
 namespace Slaycard.Api.Features.Combats;
 
 public static class SlaycardCombatsModule
 {
-    public static IServiceCollection AddCombatsModule(this IServiceCollection services)
+    public static IServiceCollection AddCombatsModule(
+        this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IBattleRepository, InMemoryBattleRepository>();
 
@@ -20,6 +23,10 @@ public static class SlaycardCombatsModule
 
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(PessimisticLockBattleBehaviour<,>));
+
+        var connectionString = configuration.GetConnectionString("SlaycardDb");
+        services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opts =>
+            opts.UseNpgsql(connectionString));
 
         return services;
     }
