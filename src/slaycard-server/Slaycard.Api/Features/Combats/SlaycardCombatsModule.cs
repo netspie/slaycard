@@ -24,9 +24,7 @@ public static class SlaycardCombatsModule
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(PessimisticLockBattleBehaviour<,>));
 
-        var connectionString = configuration.GetConnectionString("SlaycardDb");
-        services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opts =>
-            opts.UseNpgsql(connectionString));
+        services.AddDbContext<AppDbContext>();
 
         return services;
     }
